@@ -1,0 +1,386 @@
+---
+title: "Plotting on a map"
+output: html_notebook
+---
+
+Find boundaries Utm coordinates:
+```{r}
+#Group B
+print(max(GroupB.all.df$X))
+print(min(GroupB.all.df$X))
+print(max(GroupB.all.df$Y))
+print(min(GroupB.all.df$Y))
+```
+```{r}
+#Group A
+print(max(GroupA.df$X))
+print(min(GroupA.df$X))
+print(max(GroupA.df$Y))
+print(min(GroupA.df$Y))
+```
+
+Code from https://slowkow.com/notes/ggplot2-color-by-density/ :
+```{r}
+library(MASS)
+# Get density of points in 2 dimensions.
+# @param x A numeric vector.
+# @param y A numeric vector.
+# @param n Create a square n by n grid to compute density.
+# @return The density within each square.
+get_density <- function(x, y, ...) {
+  dens <- MASS::kde2d(x, y, ...)
+  ix <- findInterval(x, dens$x)
+  iy <- findInterval(y, dens$y)
+  ii <- cbind(ix, iy)
+  return(dens$z[ii])
+}
+```
+
+## Group A
+
+```{r}
+library(png)
+GroupA.map <- readPNG("C:\\Users\\User\\OneDrive\\Pictures\\Screenshots\\2023-06-21 (2).png")
+```
+Top left: 394892 4437334
+Top right: 395484 4437326
+Bottom left: 394885 4436840
+Bottom right: 395477 4436832
+
+get density + colour:
+```{r}
+datA <- GroupA.df
+datA$density <- get_density(datA$X, datA$Y, n = 100)
+
+colsA <- c()
+
+for(i in 1:nrow(datA)){
+  den = datA$density[i]
+  if(den < 0.00002){
+    colsA <- append(colsA, 'gold')
+  }else if(den < 0.00004 & den >= 0.00002){
+    colsA <- append(colsA, 'orange')
+  }else if(den < 0.00006 & den >= 0.00004){
+    colsA <- append(colsA, 'darkorange1')
+  }else if(den < 0.00008 & den >= 0.00006){
+    colsA <- append(colsA, 'orangered')
+  }else if(den < 0.00010 & den >= 0.00008){
+    colsA <- append(colsA, 'red1')
+  }else if(den < 0.00012 & den >= 0.00010){
+    colsA <- append(colsA, 'red3')
+  }else{
+    colsA <- append(colsA, 'darkred')
+  }
+}
+
+datA$color <- colsA
+```
+
+
+```{r}
+# Set up a plot area with no plot
+plot(394890:395480, 4436830:4437420, type='n', main="Group A: Overall Distribution", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupA.map, 
+            xleft=394890, xright=395480, 
+            ybottom=4436835, ytop=4437330)
+#grid()
+
+points(x = datA$X, y = datA$Y, pch = 20,
+       col = alpha(datA$color, 0.3))
+#rgb(0.1,0.35,0.1, alpha = 0.4)
+```
+
+Daytime:
+```{r}
+datA2 <- GroupA.day.df
+datA2$density <- get_density(datA2$X, datA2$Y, n = 100)
+
+colsA2 <- c()
+
+for(i in 1:nrow(datA2)){
+  den = datA2$density[i]
+  if(den < 0.00002){
+    colsA2 <- append(colsA2, 'gold')
+  }else if(den < 0.00004 & den >= 0.00002){
+    colsA2 <- append(colsA2, 'orange')
+  }else if(den < 0.00006 & den >= 0.00004){
+    colsA2 <- append(colsA2, 'darkorange1')
+  }else if(den < 0.00008 & den >= 0.00006){
+    colsA2 <- append(colsA2, 'orangered')
+  }else if(den < 0.00010 & den >= 0.00008){
+    colsA2 <- append(colsA2, 'red1')
+  }else if(den < 0.00012 & den >= 0.00010){
+    colsA2 <- append(colsA2, 'red3')
+  }else{
+    colsA2 <- append(colsA2, 'darkred')
+  }
+}
+
+datA2$color <- colsA2
+```
+
+```{r}
+# Set up a plot area with no plot
+plot(394890:395480, 4436830:4437420, type='n', main="Group A: Daytime Distribution", xlab="UTM Easting Coordinate (m)", ylab="UTM Northing Coordinate (m)")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupA.map, 
+            xleft=394890, xright=395480, 
+            ybottom=4436835, ytop=4437330)
+#grid()
+
+points(x = datA2$X, y = datA2$Y, pch = 20,
+       col = alpha(datA2$color, 0.3))
+#rgb(0.1,0.35,0.1, alpha = 0.4)
+```
+
+
+Cow W448 day 06-03:
+```{r}
+cow1A.df = GroupA.df[which(GroupA.df$idnum == 'W448'),]
+cow1day1A.df = cow1A.df[which(cow1A.df$time > '2011-06-03' & cow1A.df$time <= '2011-06-04'),]
+
+plot(394890:395480, 4436830:4437420, type='n', main="Cow W448 2011-06-03", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupA.map, 
+            xleft=394890, xright=395480, 
+            ybottom=4436835, ytop=4437330)
+#grid()
+
+lines(x = cow1day1A.df$X, y = cow1day1A.df$Y, col = cow1day1A.df$time, pch = 16)
+       #col = rgb(0.2,0.2,1, alpha = 0.8))
+points(x = cow1day1A.df$X, y = cow1day1A.df$Y, col = cow1day1A.df$time,  pch = 16)
+       #col = rgb(0.1,0.35,0.1, alpha = 0.4))
+```
+
+```{r}
+cow1A.df = GroupA.df[which(GroupA.df$idnum == 'W448'),]
+cow1day1A.day = cow1A.df[which(cow1A.df$time > '2011-06-03 05:20:00' & cow1A.df$time <= '2011-06-03 20:20:00'),]
+W448_03 <- cow1day1A.day
+
+cols_W448_03 <- c()
+
+for(i in 1:nrow(W448_03)){
+  time_W448_03 = W448_03$time[i]
+  if(time_W448_03 < '2011-06-03 07:50:00'){
+    cols_W448_03 <- append(cols_W448_03, 'gold')
+  }else if(time_W448_03 < '2011-06-03 10:20:00' & time_W448_03 >= '2011-06-03 07:50:00'){
+    cols_W448_03 <- append(cols_W448_03, 'orange')
+  }else if(time_W448_03 < '2011-06-03 12:50:00' & time_W448_03 >= '2011-06-03 10:20:00'){
+    cols_W448_03 <- append(cols_W448_03, 'orangered')
+  }else if(time_W448_03 < '2011-06-03 15:20:00' & time_W448_03 >= '2011-06-03 12:50:00'){
+    cols_W448_03 <- append(cols_W448_03, 'red')
+  }else if(time_W448_03 < '2011-06-03 17:50:00' & time_W448_03 >= '2011-06-03 15:20:00'){
+    cols_W448_03 <- append(cols_W448_03, 'red3')
+  }else{
+    cols_W448_03 <- append(cols_W448_03, 'darkred')
+  }
+}
+
+W448_03$color <- cols_W448_03
+```
+
+
+```{r}
+library(scales)
+
+plot(394890:395480, 4436830:4437420, type='n', main="Cow W448 2011-06-03", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupA.map, 
+            xleft=394890, xright=395480, 
+            ybottom=4436835, ytop=4437330)
+#grid()
+
+lines(x = W448_03$X, y = W448_03$Y, col = alpha('red', 0.4), lwd = 2)
+       #col = rgb(0.2,0.2,1, alpha = 0.8))
+points(x = W448_03$X, y = W448_03$Y, col = alpha(W448_03$color, 0.6),  pch = 16)
+```
+
+
+## Group B
+
+```{r}
+GroupB.map <- readPNG("C:\\Users\\User\\OneDrive\\Pictures\\Screenshots\\2023-06-21 (3).png")
+```
+Top left: 317609 4367811
+Top right: 318015 4367801
+Bottom left: 317597 4367318
+Bottom right: 317979 4367278
+
+get density + colour:
+```{r}
+datB <- GroupB.all.df
+datB$density <- get_density(datB$X, datB$Y, n = 100)
+
+colsB <- c()
+
+for(i in 1:nrow(datB)){
+  den = datB$density[i]
+  if(den < 0.00004){
+    colsB <- append(colsB, 'gold')
+  }else if(den < 0.00008 & den >= 0.00004){
+    colsB <- append(colsB, 'orange')
+  }else if(den < 0.00012 & den >= 0.00008){
+    colsB <- append(colsB, 'darkorange1')
+  }else if(den < 0.00016 & den >= 0.00012){
+    colsB <- append(colsB, 'orangered')
+  }else if(den < 0.00020 & den >= 0.00016){
+    colsB <- append(colsB, 'red1')
+  }else if(den < 0.00024 & den >= 0.00020){
+    colsB <- append(colsB, 'red3')
+  }else{
+    colsB <- append(colsB, 'darkred')
+  }
+}
+
+datB$color <- colsB
+```
+
+```{r}
+# Set up a plot area with no plot
+plot(317577:318110, 4367278:4367811, type='n', main="Group B: All cows all days", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupB.map, 
+            xleft=317597, xright=318015, 
+            ybottom=4367278, ytop=4367811)
+grid()
+
+points(x = datB$X, y = datB$Y, pch = 20,
+       col = alpha(datB$color, 0.1))
+```
+
+Cow M0110 on 2011-10-26
+```{r}
+cow1B.df = GroupB.all.df[which(GroupB.all.df$idnum == 'M0110'),]
+cow1day1B.df = cow1B.df[which(cow1B.df$Time > '2011-10-26' & cow1B.df$Time <= '2011-10-27'),]
+
+plot(317577:318110, 4367278:4367811, type='n', main="Cow M0110 2011-10-26", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupB.map, 
+            xleft=317597, xright=318015, 
+            ybottom=4367278, ytop=4367811)
+grid()
+
+lines(x = cow1day1B.df$X, y = cow1day1B.df$Y, pch = 16,
+       col = rgb(0.2,0.2,1, alpha = 0.8))
+points(x = cow1day1B.df$X, y = cow1day1B.df$Y, pch = 16,
+       col = rgb(1,0.8,0.5, alpha = 0.3))
+```
+```{r}
+GroupB.map2 <- readPNG("C:\\Users\\User\\OneDrive - University College Cork\\Documents\\MSc\\Thesis\\GroupBfarmImage.png")
+```
+
+```{r}
+# Set up a plot area with no plot
+plot(317750:318150, 4367500:4367900, type='n', main="Group B: All cows all days", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupB.map2, 
+            xleft=317819, xright=318018, 
+            ybottom=4367516, ytop=4367898)
+#grid()
+
+points(x = datB$X, y = datB$Y, pch = 20,
+       col = alpha(datB$color, 0.1))
+```
+Daytime:
+```{r}
+datB2 <- GroupB.day.df
+datB2$density <- get_density(datB2$X, datB2$Y, n = 100)
+
+colsB <- c()
+
+for(i in 1:nrow(datB2)){
+  den = datB2$density[i]
+  if(den < 0.00002){
+    colsB <- append(colsB, 'gold')
+  }else if(den < 0.00004 & den >= 0.00002){
+    colsB <- append(colsB, 'orange')
+  }else if(den < 0.00006 & den >= 0.00004){
+    colsB <- append(colsB, 'darkorange1')
+  }else if(den < 0.00008 & den >= 0.00006){
+    colsB <- append(colsB, 'orangered')
+  }else if(den < 0.00010 & den >= 0.00008){
+    colsB <- append(colsB, 'red1')
+  }else if(den < 0.00012 & den >= 0.00010){
+    colsB <- append(colsB, 'red3')
+  }else{
+    colsB <- append(colsB, 'darkred')
+  }
+}
+
+datB2$color <- colsB
+```
+
+```{r}
+# Set up a plot area with no plot
+plot(317765:318150, 4367515:4367900, type='n', main="Group B: Daytime Distribution", xlab="UTM Easting Coordinate (m)", ylab="UTM Northing Coordinate (m)")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupB.map2, 
+            xleft=317819, xright=318018, 
+            ybottom=4367516, ytop=4367898)
+#grid()
+
+points(x = datB2$X, y = datB2$Y, pch = 19,
+       col = alpha(datB2$color, 0.3))
+```
+Group B sunrise/sunset = 07:15 to 18:00
+
+```{r}
+cow1B.df = GroupB.day.df[which(GroupB.day.df$idnum == 'M0110'),]
+cow1day1B.df = cow1B.df[which(cow1B.df$Time > '2011-10-26' & cow1B.df$Time <= '2011-10-27'),]
+M0110_26 <- cow1day1B.df
+
+cols_M0110_26 <- c()
+
+for(i in 1:nrow(M0110_26)){
+  time_M0110_26 = M0110_26$Time[i]
+  if(time_M0110_26 < '2011-10-26 09:00:00'){
+    cols_M0110_26 <- append(cols_M0110_26, 'gold')
+  }else if(time_M0110_26 < '2011-10-26 10:45:00' & time_M0110_26 >= '2011-10-26 09:00:00'){
+    cols_M0110_26 <- append(cols_M0110_26, 'orange')
+  }else if(time_M0110_26 < '2011-10-26 12:30:00' & time_M0110_26 >= '2011-10-26 10:45:00'){
+    cols_M0110_26 <- append(cols_M0110_26, 'orangered')
+  }else if(time_M0110_26 < '2011-10-26 14:15:00' & time_M0110_26 >= '2011-10-26 12:30:00'){
+    cols_M0110_26 <- append(cols_M0110_26, 'red')
+  }else if(time_M0110_26 < '2011-10-26 16:00:00' & time_M0110_26 >= '2011-10-26 14:15:00'){
+    cols_M0110_26 <- append(cols_M0110_26, 'red3')
+  }else{
+    cols_M0110_26 <- append(cols_M0110_26, 'darkred')
+  }
+}
+
+M0110_26$color <- cols_M0110_26
+```
+
+```{r}
+# Set up a plot area with no plot
+plot(317750:318150, 4367500:4367900, type='n', main="Cow M0110 2011-10-26", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupB.map2, 
+            xleft=317819, xright=318018, 
+            ybottom=4367516, ytop=4367898)
+
+lines(x = M0110_26$X, y = M0110_26$Y, col = alpha('red', 0.4), lwd = 2)
+       #col = rgb(0.2,0.2,1, alpha = 0.8))
+points(x = M0110_26$X, y = M0110_26$Y, col = alpha(M0110_26$color, 0.6),  pch = 16)
+```
+
+

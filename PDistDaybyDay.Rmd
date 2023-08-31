@@ -1,0 +1,1263 @@
+---
+title: "Day-by-Day Median Pairwise Distance Networks"
+output: html_notebook
+---
+
+Use median instead of mean to reduce the effect of outliers.
+
+Daytime only.
+
+Already have days with timegroups (4 min intervals) from DayByDay.Rmd (e.g. GroupA.02, GroupB.24)
+
+Have timegroupsA, timegroupsB, GroupA.pairs, GroupB.pairs.
+
+Using Euclidean distance.
+
+## Group A
+
+Get timegroups:
+```{r}
+timegroupsA.02 = unique(GroupA.02$timegroup)
+timegroupsA.03 = unique(GroupA.03$timegroup)
+timegroupsA.04 = unique(GroupA.04$timegroup)
+timegroupsA.05 = unique(GroupA.05$timegroup)
+timegroupsA.06 = unique(GroupA.06$timegroup)
+timegroupsA.07 = unique(GroupA.07$timegroup)
+timegroupsA.08 = unique(GroupA.08$timegroup)
+timegroupsA.09 = unique(GroupA.09$timegroup)
+timegroupsA.10 = unique(GroupA.10$timegroup)
+timegroupsA.11 = unique(GroupA.11$timegroup)
+timegroupsA.12 = unique(GroupA.12$timegroup)
+```
+
+Group A: 2011-06-02
+```{r}
+# matrix
+medA.02 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.02[which(GroupA.02$idnum == pair.id1),]
+  pair.2 = GroupA.02[which(GroupA.02$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.02))
+  
+  for(i in 1:length(timegroupsA.02)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.02[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.02[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.02[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.02[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medA.02[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medA.02[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group A: 2011-06-03
+```{r}
+# matrix
+medA.03 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.03[which(GroupA.03$idnum == pair.id1),]
+  pair.2 = GroupA.03[which(GroupA.03$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.03))
+  
+  for(i in 1:length(timegroupsA.03)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.03[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.03[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.03[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.03[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medA.03[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medA.03[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group A: 2011-06-04
+```{r}
+# matrix
+medA.04 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.04[which(GroupA.04$idnum == pair.id1),]
+  pair.2 = GroupA.04[which(GroupA.04$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.04))
+  
+  for(i in 1:length(timegroupsA.04)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.04[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.04[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.04[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.04[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medA.04[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medA.04[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group A: 2011-06-05
+```{r}
+# matrix
+medA.05 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.05[which(GroupA.05$idnum == pair.id1),]
+  pair.2 = GroupA.05[which(GroupA.05$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.05))
+  
+  for(i in 1:length(timegroupsA.05)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.05[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.05[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.05[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.05[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medA.05[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medA.05[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group A: 2011-06-06
+```{r}
+# matrix
+medA.06 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.06[which(GroupA.06$idnum == pair.id1),]
+  pair.2 = GroupA.06[which(GroupA.06$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.06))
+  
+  for(i in 1:length(timegroupsA.06)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.06[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.06[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.06[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.06[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medA.06[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medA.06[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group A: 2011-06-07
+```{r}
+# matrix
+medA.07 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.07[which(GroupA.07$idnum == pair.id1),]
+  pair.2 = GroupA.07[which(GroupA.07$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.07))
+  
+  for(i in 1:length(timegroupsA.07)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.07[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.07[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.07[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.07[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medA.07[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medA.07[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group A: 2011-06-08
+```{r}
+# matrix
+medA.08 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.08[which(GroupA.08$idnum == pair.id1),]
+  pair.2 = GroupA.08[which(GroupA.08$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.08))
+  
+  for(i in 1:length(timegroupsA.08)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.08[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.08[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.08[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.08[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medA.08[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medA.08[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group A: 2011-06-09
+```{r}
+# matrix
+medA.09 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.09[which(GroupA.09$idnum == pair.id1),]
+  pair.2 = GroupA.09[which(GroupA.09$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.09))
+  
+  for(i in 1:length(timegroupsA.09)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.09[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.09[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.09[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.09[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medA.09[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medA.09[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group A: 2011-06-10
+```{r}
+# matrix
+medA.10 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.10[which(GroupA.10$idnum == pair.id1),]
+  pair.2 = GroupA.10[which(GroupA.10$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.10))
+  
+  for(i in 1:length(timegroupsA.10)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.10[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.10[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.10[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.10[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medA.10[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medA.10[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group A: 2011-06-11
+```{r}
+# matrix
+medA.11 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.11[which(GroupA.11$idnum == pair.id1),]
+  pair.2 = GroupA.11[which(GroupA.11$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.11))
+  
+  for(i in 1:length(timegroupsA.11)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.11[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.11[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.11[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.11[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medA.11[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medA.11[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group A: 2011-06-12
+```{r}
+# matrix
+medA.12 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.12[which(GroupA.12$idnum == pair.id1),]
+  pair.2 = GroupA.12[which(GroupA.12$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.12))
+  
+  for(i in 1:length(timegroupsA.12)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.12[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.12[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.12[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.12[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medA.12[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medA.12[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Heatmaps:
+```{r}
+library(pheatmap)
+breaksList = seq(0, 30, by = 1)
+
+pheatmap(medA.02, color = colorRampPalette(c('black','red', 'yellow', 'white'))(31), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (2011-06-02)', breaks = breaksList)
+
+pheatmap(medA.03, color = colorRampPalette(c('black','red', 'yellow', 'white'))(31), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (2011-06-03)', breaks = breaksList)
+
+pheatmap(medA.04, color = colorRampPalette(c('black','red', 'yellow', 'white'))(31), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (2011-06-04)', breaks = breaksList)
+
+pheatmap(medA.05, color = colorRampPalette(c('black','red', 'yellow', 'white'))(31), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (2011-06-05)', breaks = breaksList)
+
+pheatmap(medA.06, color = colorRampPalette(c('black','red', 'yellow', 'white'))(31), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (2011-06-06)', breaks = breaksList)
+
+pheatmap(medA.07, color = colorRampPalette(c('black','red', 'yellow', 'white'))(31), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (2011-06-07)', breaks = breaksList)
+
+pheatmap(medA.08, color = colorRampPalette(c('black','red', 'yellow', 'white'))(31), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (2011-06-08)', breaks = breaksList)
+
+pheatmap(medA.09, color = colorRampPalette(c('black','red', 'yellow', 'white'))(31), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (2011-06-09)', breaks = breaksList)
+
+pheatmap(medA.10, color = colorRampPalette(c('black','red', 'yellow', 'white'))(31), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (2011-06-10)', breaks = breaksList)
+
+pheatmap(medA.11, color = colorRampPalette(c('black','red', 'yellow', 'white'))(31), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (2011-06-11)', breaks = breaksList)
+
+pheatmap(medA.12, color = colorRampPalette(c('black','red', 'yellow', 'white'))(31), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (2011-06-12)', breaks = breaksList)
+```
+
+
+## Group B
+
+Group B: 2011-10-24
+```{r}
+# matrix
+medB.24 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+for(i in 1:28){
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  
+  pair.1 = GroupB.24[which(GroupB.24$idnum == pair.id1),]
+  pair.2 = GroupB.24[which(GroupB.24$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsB.24))
+  
+  for(i in 1:length(timegroupsB.24)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsB.24[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsB.24[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsB.24[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsB.24[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medB.24[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medB.24[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group B: 2011-10-25
+```{r}
+# matrix
+medB.25 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+for(i in 1:28){
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  
+  pair.1 = GroupB.25[which(GroupB.25$idnum == pair.id1),]
+  pair.2 = GroupB.25[which(GroupB.25$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsB.25))
+  
+  for(i in 1:length(timegroupsB.25)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsB.25[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsB.25[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsB.25[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsB.25[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medB.25[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medB.25[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group B: 2011-10-26
+```{r}
+# matrix
+medB.26 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+for(i in 1:28){
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  
+  pair.1 = GroupB.26[which(GroupB.26$idnum == pair.id1),]
+  pair.2 = GroupB.26[which(GroupB.26$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsB.26))
+  
+  for(i in 1:length(timegroupsB.26)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsB.26[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsB.26[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsB.26[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsB.26[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medB.26[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medB.26[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Group B: 2011-10-27
+```{r}
+# matrix
+medB.27 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+for(i in 1:28){
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  
+  pair.1 = GroupB.27[which(GroupB.27$idnum == pair.id1),]
+  pair.2 = GroupB.27[which(GroupB.27$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsB.27))
+  
+  for(i in 1:length(timegroupsB.27)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsB.27[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsB.27[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsB.27[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsB.27[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  medB.27[pair.id1, pair.id2] = median(pair.dists, na.rm = T)
+  medB.27[pair.id2, pair.id1] = median(pair.dists, na.rm = T)
+}
+```
+
+Heatmaps:
+```{r}
+breaksList = seq(0, 40, by = 1)
+
+pheatmap(medB.24, color = colorRampPalette(c('black','red', 'yellow', 'white'))(41), cluster_cols = F, cluster_rows = F, treeheight_col = 0, treeheight_row = 0, cellwidth= 33, cellheight = 33, main = 'Median Pairwise Distance - Group B (2011-10-24)', breaks = breaksList)
+
+pheatmap(medB.25, color = colorRampPalette(c('black','red', 'yellow', 'white'))(41), cluster_cols = F, cluster_rows = F, treeheight_col = 0, treeheight_row = 0, cellwidth= 33, cellheight = 33, main = 'Median Pairwise Distance - Group B (2011-10-25)', breaks = breaksList)
+
+pheatmap(medB.26, color = colorRampPalette(c('black','red', 'yellow', 'white'))(41), cluster_cols = F, cluster_rows = F, treeheight_col = 0, treeheight_row = 0, cellwidth= 33, cellheight = 33, main = 'Median Pairwise Distance - Group B (2011-10-26)', breaks = breaksList)
+
+pheatmap(medB.27, color = colorRampPalette(c('black','red', 'yellow', 'white'))(41), cluster_cols = F, cluster_rows = F, treeheight_col = 0, treeheight_row = 0, cellwidth= 33, cellheight = 33, main = 'Median Pairwise Distance - Group B (2011-10-27)', breaks = breaksList)
+```
+
+## Networks
+
+Group A:
+```{r}
+#inverse since closer = better
+medA.02inv = 1/medA.02
+medA.03inv = 1/medA.03
+medA.04inv = 1/medA.04
+medA.05inv = 1/medA.05
+medA.06inv = 1/medA.06
+medA.07inv = 1/medA.07
+medA.08inv = 1/medA.08
+medA.09inv = 1/medA.09
+medA.10inv = 1/medA.10
+medA.11inv = 1/medA.11
+medA.12inv = 1/medA.12
+
+#set inf to 0 (1/0 -> inf)
+medA.02inv[is.infinite(medA.02inv)] <- 0
+medA.03inv[is.infinite(medA.03inv)] <- 0
+medA.04inv[is.infinite(medA.04inv)] <- 0
+medA.05inv[is.infinite(medA.05inv)] <- 0
+medA.06inv[is.infinite(medA.06inv)] <- 0
+medA.07inv[is.infinite(medA.07inv)] <- 0
+medA.08inv[is.infinite(medA.08inv)] <- 0
+medA.09inv[is.infinite(medA.09inv)] <- 0
+medA.10inv[is.infinite(medA.10inv)] <- 0
+medA.11inv[is.infinite(medA.11inv)] <- 0
+medA.12inv[is.infinite(medA.12inv)] <- 0
+```
+
+Node Strength:
+```{r}
+n = 24
+
+#2011-06-02
+PDistA.strength02 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(medA.02inv[groupA.ids[i], ], na.rm = T)
+  PDistA.strength02[i] = soc
+}
+pdiststrnA02 <- data.frame(groupA.ids)
+pdiststrnA02$strength <- PDistA.strength02
+pdiststrnA02$date <- unique(GroupA.day.df$date)[1]
+
+#2011-06-03
+PDistA.strength03 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(medA.03inv[groupA.ids[i], ], na.rm = T)
+  PDistA.strength03[i] = soc
+}
+pdiststrnA03 <- data.frame(groupA.ids)
+pdiststrnA03$strength <- PDistA.strength03
+pdiststrnA03$date <- unique(GroupA.day.df$date)[2]
+
+#2011-06-04
+PDistA.strength04 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(medA.04invinv[groupA.ids[i], ], na.rm = T)
+  PDistA.strength04[i] = soc
+}
+pdiststrnA04 <- data.frame(groupA.ids)
+pdiststrnA04$strength <- PDistA.strength04
+pdiststrnA04$date <- unique(GroupA.day.df$date)[3]
+
+#2011-06-05
+PDistA.strength05 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(medA.05inv[groupA.ids[i], ], na.rm = T)
+  PDistA.strength05[i] = soc
+}
+pdiststrnA05 <- data.frame(groupA.ids)
+pdiststrnA05$strength <- PDistA.strength05
+pdiststrnA05$date <- unique(GroupA.day.df$date)[4]
+
+#2011-06-06
+PDistA.strength06 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(medA.06inv[groupA.ids[i], ], na.rm = T)
+  PDistA.strength06[i] = soc
+}
+pdiststrnA06 <- data.frame(groupA.ids)
+pdiststrnA06$strength <- PDistA.strength06
+pdiststrnA06$date <- unique(GroupA.day.df$date)[5]
+
+#2011-06-07
+PDistA.strength07 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(medA.07inv[groupA.ids[i], ], na.rm = T)
+  PDistA.strength07[i] = soc
+}
+pdiststrnA07 <- data.frame(groupA.ids) 
+pdiststrnA07$strength <- PDistA.strength07
+pdiststrnA07$date <- unique(GroupA.day.df$date)[6]
+
+#2011-06-08
+PDistA.strength08 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(medA.08inv[groupA.ids[i], ], na.rm = T)
+  PDistA.strength08[i] = soc
+}
+pdiststrnA08 <- data.frame(groupA.ids)
+pdiststrnA08$strength <- PDistA.strength08
+pdiststrnA08$date <- unique(GroupA.day.df$date)[7]
+
+#2011-06-09
+PDistA.strength09 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(medA.09inv[groupA.ids[i], ], na.rm = T)
+  PDistA.strength09[i] = soc
+}
+pdiststrnA09 <- data.frame(groupA.ids)
+pdiststrnA09$strength <- PDistA.strength09
+pdiststrnA09$date <- unique(GroupA.day.df$date)[8]
+
+#2011-06-10
+PDistA.strength10 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(medA.10inv[groupA.ids[i], ], na.rm = T)
+  PDistA.strength10[i] = soc
+}
+pdiststrnA10 <- data.frame(groupA.ids)
+pdiststrnA10$strength <- PDistA.strength10
+pdiststrnA10$date <- unique(GroupA.day.df$date)[9]
+
+#2011-06-11
+PDistA.strength11 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(medA.11inv[groupA.ids[i], ], na.rm = T)
+  PDistA.strength11[i] = soc
+}
+pdiststrnA11 <- data.frame(groupA.ids)
+pdiststrnA11$strength <- PDistA.strength11
+pdiststrnA11$date <- unique(GroupA.day.df$date)[10]
+
+#2011-06-12
+PDistA.strength12 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(medA.12inv[groupA.ids[i], ], na.rm = T)
+  PDistA.strength12[i] = soc
+}
+pdiststrnA12 <- data.frame(groupA.ids) 
+pdiststrnA12$strength <- PDistA.strength12
+pdiststrnA12$date <- unique(GroupA.day.df$date)[11]
+```
+
+Want plot of sociality (node strength) per cow over time:
+```{r}
+NS_pdistA <- list(pdiststrnA02, pdiststrnA03, pdiststrnA04, pdiststrnA05, pdiststrnA06, pdiststrnA07, pdiststrnA08, pdiststrnA09, pdiststrnA10, pdiststrnA11, pdiststrnA12)
+
+pdiststrnA.all = Reduce(function(x, y) merge(x, y, all=TRUE), NS_pdistA)
+```
+
+```{r}
+library(ggplot2)
+library(Polychrome)
+
+Dark24 <- createPalette(24, c('#2A95E8', '#E5629C'), range = c(10, 60)) 
+names(Dark24) <- NULL
+
+al = alphabet.colors(24)
+names(al) <- NULL
+```
+
+```{r}
+ggplot(pdiststrnA.all, aes(x = date, y = strength, group = groupA.ids)) + geom_line(aes(color = groupA.ids)) + geom_point(aes(color = groupA.ids)) + scale_color_manual(values = al) + labs(title = 'Plot of Sociality over time - Group A (Median Pairwise Distance)', x = 'Date', y = 'Node Strength (Sociality)', color = "Animal ID")
+```
+
+Group B:
+```{r}
+#inverse since closer = better
+medB.24inv = 1/medB.24
+medB.25inv = 1/medB.25
+medB.26inv = 1/medB.26
+medB.27inv = 1/medB.27
+
+#set inf to 0 (1/0 -> inf)
+medB.24inv[is.infinite(medB.24inv)] <- 0
+medB.25inv[is.infinite(medB.25inv)] <- 0
+medB.26inv[is.infinite(medB.26inv)] <- 0
+medB.27inv[is.infinite(medB.27inv)] <- 0
+```
+
+Node Strength:
+```{r}
+n = 8
+
+# 2011-10-24
+PDistB.strength24 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupB.ids)){
+  soc = sum(medB.24inv[groupB.ids[i], ], na.rm = T)
+  PDistB.strength24[i] = soc
+}
+
+pdiststrnB24 <- data.frame(groupB.ids)
+pdiststrnB24$strength <- PDistB.strength24
+pdiststrnB24$date <- unique(GroupB.day.df$date)[1]
+
+# 2011-10-25
+PDistB.strength25 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupB.ids)){
+  soc = sum(medB.25inv[groupB.ids[i], ], na.rm = T)
+  PDistB.strength25[i] = soc
+}
+
+pdiststrnB25 <- data.frame(groupB.ids)
+pdiststrnB25$strength <- PDistB.strength25
+pdiststrnB25$date <- unique(GroupB.day.df$date)[2]
+
+# 2011-10-26
+PDistB.strength26 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupB.ids)){
+  soc = sum(medB.26inv[groupB.ids[i], ], na.rm = T)
+  PDistB.strength26[i] = soc
+}
+
+pdiststrnB26 <- data.frame(groupB.ids)
+pdiststrnB26$strength <- PDistB.strength26
+pdiststrnB26$date <- unique(GroupB.day.df$date)[3]
+
+# 2011-10-27
+PDistB.strength27 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupB.ids)){
+  soc = sum(medB.27inv[groupB.ids[i], ], na.rm = T)
+  PDistB.strength27[i] = soc
+}
+
+pdiststrnB27 <- data.frame(groupB.ids)
+pdiststrnB27$strength <- PDistB.strength27
+pdiststrnB27$date <- unique(GroupB.day.df$date)[4]
+```
+
+Plot:
+```{r}
+NS_pdistB <- list(pdiststrnB24, pdiststrnB25, pdiststrnB26, pdiststrnB27)
+
+pdiststrnB.all = Reduce(function(x, y) merge(x, y, all=TRUE), NS_pdistB)
+```
+
+```{r}
+library(ggplot2)
+library(Polychrome)
+
+Dark24 <- createPalette(24, c('#2A95E8', '#E5629C'), range = c(10, 60)) 
+names(Dark24) <- NULL
+
+al = alphabet.colors(24)
+names(al) <- NULL
+```
+
+```{r}
+ggplot(pdiststrnB.all, aes(x = date, y = strength, group = groupB.ids)) + geom_line(aes(color = groupB.ids)) + geom_point(aes(color = groupB.ids)) + scale_color_manual(values = Dark24) + labs(title = 'Plot of Sociality over time - Group B (Median Pairwise Distance)', x = 'Date', y = 'Node Strength (Sociality)', color = 'Animal ID')
+```
+
+## Network Graphs
+
+Group A:
+```{r}
+library(igraph)
+c_scale <- colorRamp(c('white','black'))
+
+#Group A
+coordsA <- layout.fruchterman.reingold(GroupA.graph)
+
+# 2011-06-02
+medA.02inv[is.na(medA.02inv)] <- 0
+GroupAmed.graph02 <- graph.adjacency(medA.02inv, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph02)$weight <- (E(GroupAmed.graph02)$weight - min(medA.02inv))/(max(medA.02inv)- min(medA.02inv))
+E(GroupAmed.graph02)$color = apply(c_scale(E(GroupAmed.graph02)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph02)$weight <- (E(GroupAmed.graph02)$weight)*10
+V(GroupAmed.graph02)$size <- ((PDistA.strength02-min(PDistA.strength02))/(max(PDistA.strength02)-
+                                                                            min(PDistA.strength02)))*25
+plot(GroupAmed.graph02, edge.width = E(GroupAmed.graph02)$weight, edge.col = E(GroupAmed.graph02)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-02')
+
+# 2011-06-03
+medA.03inv[is.na(medA.03inv)] <- 0
+GroupAmed.graph03 <- graph.adjacency(medA.03inv, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph03)$weight <- (E(GroupAmed.graph03)$weight - min(medA.03inv))/(max(medA.03inv)- min(medA.03inv))
+E(GroupAmed.graph03)$color = apply(c_scale(E(GroupAmed.graph03)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph03)$weight <- (E(GroupAmed.graph03)$weight)*10
+V(GroupAmed.graph03)$size <- ((PDistA.strength03-min(PDistA.strength03))/(max(PDistA.strength03)-
+                                                                            min(PDistA.strength03)))*25
+plot(GroupAmed.graph03, edge.width = E(GroupAmed.graph03)$weight, edge.col = E(GroupAmed.graph03)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-03')
+
+# 2011-06-04
+medA.04inv[is.na(medA.04inv)] <- 0
+GroupAmed.graph04 <- graph.adjacency(medA.04inv, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph04)$weight <- (E(GroupAmed.graph04)$weight - min(medA.04inv))/(max(medA.04inv)- min(medA.04inv))
+E(GroupAmed.graph04)$color = apply(c_scale(E(GroupAmed.graph04)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph04)$weight <- (E(GroupAmed.graph04)$weight)*10
+V(GroupAmed.graph04)$size <- ((PDistA.strength04-min(PDistA.strength04))/(max(PDistA.strength04)-
+                                                                            min(PDistA.strength04)))*25
+plot(GroupAmed.graph04, edge.width = E(GroupAmed.graph04)$weight, edge.col = E(GroupAmed.graph04)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-04')
+
+# 2011-06-05
+medA.05inv[is.na(medA.05inv)] <- 0
+GroupAmed.graph05 <- graph.adjacency(medA.05inv, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph05)$weight <- (E(GroupAmed.graph05)$weight - min(medA.05inv))/(max(medA.05inv)- min(medA.05inv))
+E(GroupAmed.graph05)$color = apply(c_scale(E(GroupAmed.graph05)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph05)$weight <- (E(GroupAmed.graph05)$weight)*10
+V(GroupAmed.graph05)$size <- ((PDistA.strength05-min(PDistA.strength05))/(max(PDistA.strength05)-
+                                                                            min(PDistA.strength05)))*25
+plot(GroupAmed.graph05, edge.width = E(GroupAmed.graph05)$weight, edge.col = E(GroupAmed.graph05)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-05')
+
+# 2011-06-06
+medA.06inv[is.na(medA.06inv)] <- 0
+GroupAmed.graph06 <- graph.adjacency(medA.06inv, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph06)$weight <- (E(GroupAmed.graph06)$weight - min(medA.06inv))/(max(medA.06inv)- min(medA.06inv))
+E(GroupAmed.graph06)$color = apply(c_scale(E(GroupAmed.graph06)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph06)$weight <- (E(GroupAmed.graph06)$weight)*10
+V(GroupAmed.graph06)$size <- ((PDistA.strength06-min(PDistA.strength06))/(max(PDistA.strength06)-
+                                                                            min(PDistA.strength06)))*25
+plot(GroupAmed.graph06, edge.width = E(GroupAmed.graph06)$weight, edge.col = E(GroupAmed.graph06)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-06')
+
+# 2011-06-07
+medA.07inv[is.na(medA.07inv)] <- 0
+GroupAmed.graph07 <- graph.adjacency(medA.07inv, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph07)$weight <- (E(GroupAmed.graph07)$weight - min(medA.07inv))/(max(medA.07inv)- min(medA.07inv))
+E(GroupAmed.graph07)$color = apply(c_scale(E(GroupAmed.graph07)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph07)$weight <- (E(GroupAmed.graph07)$weight)*10
+V(GroupAmed.graph07)$size <- ((PDistA.strength07-min(PDistA.strength07))/(max(PDistA.strength07)-
+                                                                            min(PDistA.strength07)))*25
+plot(GroupAmed.graph07, edge.width = E(GroupAmed.graph07)$weight, edge.col = E(GroupAmed.graph07)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-07')
+
+# 2011-06-08
+medA.08inv[is.na(medA.08inv)] <- 0
+GroupAmed.graph08 <- graph.adjacency(medA.08inv, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph08)$weight <- (E(GroupAmed.graph08)$weight - min(medA.08inv))/(max(medA.08inv)- min(medA.08inv))
+E(GroupAmed.graph08)$color = apply(c_scale(E(GroupAmed.graph08)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph08)$weight <- (E(GroupAmed.graph08)$weight)*10
+V(GroupAmed.graph08)$size <- ((PDistA.strength08-min(PDistA.strength08))/(max(PDistA.strength08)-
+                                                                            min(PDistA.strength08)))*25
+plot(GroupAmed.graph08, edge.width = E(GroupAmed.graph08)$weight, edge.col = E(GroupAmed.graph08)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-08')
+
+# 2011-06-09
+medA.09inv[is.na(medA.09inv)] <- 0
+GroupAmed.graph09 <- graph.adjacency(medA.09inv, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph09)$weight <- (E(GroupAmed.graph09)$weight - min(medA.09inv))/(max(medA.09inv)- min(medA.09inv))
+E(GroupAmed.graph09)$color = apply(c_scale(E(GroupAmed.graph09)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph09)$weight <- (E(GroupAmed.graph09)$weight)*10
+V(GroupAmed.graph09)$size <- ((PDistA.strength09-min(PDistA.strength09))/(max(PDistA.strength09)-
+                                                                            min(PDistA.strength09)))*25
+plot(GroupAmed.graph09, edge.width = E(GroupAmed.graph09)$weight, edge.col = E(GroupAmed.graph09)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-09')
+
+# 2011-06-10
+medA.10inv[is.na(medA.10inv)] <- 0
+GroupAmed.graph10 <- graph.adjacency(medA.10inv, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph10)$weight <- (E(GroupAmed.graph10)$weight - min(medA.10inv))/(max(medA.10inv)- min(medA.10inv))
+E(GroupAmed.graph10)$color = apply(c_scale(E(GroupAmed.graph10)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph10)$weight <- (E(GroupAmed.graph10)$weight)*10
+V(GroupAmed.graph10)$size <- ((PDistA.strength10-min(PDistA.strength10))/(max(PDistA.strength10)-
+                                                                            min(PDistA.strength10)))*25
+plot(GroupAmed.graph10, edge.width = E(GroupAmed.graph10)$weight, edge.col = E(GroupAmed.graph10)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-10')
+
+# 2011-06-11
+medA.11inv[is.na(medA.11inv)] <- 0
+GroupAmed.graph11 <- graph.adjacency(medA.11inv, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph11)$weight <- (E(GroupAmed.graph11)$weight - min(medA.11inv))/(max(medA.11inv)- min(medA.11inv))
+E(GroupAmed.graph11)$color = apply(c_scale(E(GroupAmed.graph11)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph11)$weight <- (E(GroupAmed.graph11)$weight)*10
+V(GroupAmed.graph11)$size <- ((PDistA.strength11-min(PDistA.strength11))/(max(PDistA.strength11)-
+                                                                            min(PDistA.strength11)))*25
+plot(GroupAmed.graph11, edge.width = E(GroupAmed.graph11)$weight, edge.col = E(GroupAmed.graph11)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-11')
+
+# 2011-06-12
+medA.12inv[is.na(medA.12inv)] <- 0
+GroupAmed.graph12 <- graph.adjacency(medA.12inv, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph12)$weight <- (E(GroupAmed.graph12)$weight - min(medA.12inv))/(max(medA.12inv)- min(medA.12inv))
+E(GroupAmed.graph12)$color = apply(c_scale(E(GroupAmed.graph12)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph12)$weight <- (E(GroupAmed.graph12)$weight)*10
+V(GroupAmed.graph12)$size <- ((PDistA.strength12-min(PDistA.strength12))/(max(PDistA.strength12)-
+                                                                            min(PDistA.strength12)))*25
+plot(GroupAmed.graph12, edge.width = E(GroupAmed.graph12)$weight, edge.col = E(GroupAmed.graph12)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-12')
+```
+
+Group B:
+```{r}
+#coordsB <- layout.fruchterman.reingold(GroupB.graph)
+
+# 2011-10-24
+GroupBmed.graph24 <- graph.adjacency(medB.24inv, mode="undirected", weighted=TRUE)
+E(GroupBmed.graph24)$weight <- (E(GroupBmed.graph24)$weight - min(medB.24inv))/(max(medB.24inv)- min(medB.24inv))
+E(GroupBmed.graph24)$color = apply(c_scale(E(GroupBmed.graph24)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupBmed.graph24)$weight <- (E(GroupBmed.graph24)$weight)*10
+V(GroupBmed.graph24)$size <- ((PDistB.strength24- min(PDistB.strength24))/(max(PDistB.strength24)-
+                                                                             min(PDistB.strength24)))*35
+plot(GroupBmed.graph24, edge.width = E(GroupBmed.graph24)$weight, edge.col = E(GroupBmed.graph24)$color, layout=coordsB, main = 'Network of Median Pairwise Distances - Group B 2011-10-24')
+
+# 2011-10-25
+GroupBmed.graph25 <- graph.adjacency(medB.25inv, mode="undirected", weighted=TRUE)
+E(GroupBmed.graph25)$weight <- (E(GroupBmed.graph25)$weight - min(medB.25inv))/(max(medB.25inv)- min(medB.25inv))
+E(GroupBmed.graph25)$color = apply(c_scale(E(GroupBmed.graph25)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupBmed.graph25)$weight <- (E(GroupBmed.graph25)$weight)*10
+V(GroupBmed.graph25)$size <- ((PDistB.strength25- min(PDistB.strength25))/(max(PDistB.strength25)-
+                                                                             min(PDistB.strength25)))*35
+plot(GroupBmed.graph25, edge.width = E(GroupBmed.graph25)$weight, edge.col = E(GroupBmed.graph25)$color, layout=coordsB, main = 'Network of Median Pairwise Distances - Group B 2011-10-25')
+
+# 2011-10-26
+GroupBmed.graph26 <- graph.adjacency(medB.26inv, mode="undirected", weighted=TRUE)
+E(GroupBmed.graph26)$weight <- (E(GroupBmed.graph26)$weight - min(medB.26inv))/(max(medB.26inv)- min(medB.26inv))
+E(GroupBmed.graph26)$color = apply(c_scale(E(GroupBmed.graph26)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupBmed.graph26)$weight <- (E(GroupBmed.graph26)$weight)*10
+V(GroupBmed.graph26)$size <- ((PDistB.strength26- min(PDistB.strength26))/(max(PDistB.strength26)-
+                                                                             min(PDistB.strength26)))*35
+plot(GroupBmed.graph26, edge.width = E(GroupBmed.graph26)$weight, edge.col = E(GroupBmed.graph26)$color, layout=coordsB, main = 'Network of Median Pairwise Distances - Group B 2011-10-26')
+
+# 2011-10-27
+GroupBmed.graph27 <- graph.adjacency(medB.27inv, mode="undirected", weighted=TRUE)
+E(GroupBmed.graph27)$weight <- (E(GroupBmed.graph27)$weight - min(medB.27inv))/(max(medB.27inv)- min(medB.27inv))
+E(GroupBmed.graph27)$color = apply(c_scale(E(GroupBmed.graph27)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupBmed.graph27)$weight <- (E(GroupBmed.graph27)$weight)*10
+V(GroupBmed.graph27)$size <- ((PDistB.strength27- min(PDistB.strength27))/(max(PDistB.strength27)-
+                                                                             min(PDistB.strength27)))*35
+plot(GroupBmed.graph27, edge.width = E(GroupBmed.graph27)$weight, edge.col = E(GroupBmed.graph27)$color, layout=coordsB, main = 'Network of Median Pairwise Distances - Group B 2011-10-27')
+```
+
+# Group A remove edges
+
+```{r}
+# 2011-06-02
+medA.02inv.2 = medA.02inv
+for(i in 1:24){
+  for(j in 1:24){
+  if(medA.02inv[i,j] < mean(medA.02inv)){
+    medA.02inv.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-03
+medA.03inv.2 = medA.03inv
+for(i in 1:24){
+  for(j in 1:24){
+  if(medA.03inv[i,j] < mean(medA.03inv)){
+    medA.03inv.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-04
+medA.04inv.2 = medA.04inv
+for(i in 1:24){
+  for(j in 1:24){
+  if(medA.04inv[i,j] < mean(medA.04inv)){
+    medA.04inv.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-05
+medA.05inv.2 = medA.05inv
+for(i in 1:24){
+  for(j in 1:24){
+  if(medA.05inv[i,j] < mean(medA.05inv)){
+    medA.05inv.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-06
+medA.06inv.2 = medA.06inv
+for(i in 1:24){
+  for(j in 1:24){
+  if(medA.06inv[i,j] < mean(medA.06inv)){
+    medA.06inv.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-07
+medA.07inv.2 = medA.07inv
+for(i in 1:24){
+  for(j in 1:24){
+  if(medA.07inv[i,j] < mean(medA.07inv)){
+    medA.07inv.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-08
+medA.08inv.2 = medA.08inv
+for(i in 1:24){
+  for(j in 1:24){
+  if(medA.08inv[i,j] < mean(medA.08inv)){
+    medA.08inv.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-09
+medA.09inv.2 = medA.09inv
+for(i in 1:24){
+  for(j in 1:24){
+  if(medA.09inv[i,j] < mean(medA.09inv)){
+    medA.09inv.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-10
+medA.10inv.2 = medA.10inv
+for(i in 1:24){
+  for(j in 1:24){
+  if(medA.10inv[i,j] < mean(medA.10inv)){
+    medA.10inv.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-11
+medA.11inv.2 = medA.11inv
+for(i in 1:24){
+  for(j in 1:24){
+  if(medA.11inv[i,j] < mean(medA.11inv)){
+    medA.11inv.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-12
+medA.12inv.2 = medA.12inv
+for(i in 1:24){
+  for(j in 1:24){
+  if(medA.12inv[i,j] < mean(medA.12inv)){
+    medA.12inv.2[i,j] = 0
+  }
+  }
+}
+```
+
+```{r}
+library(igraph)
+c_scale <- colorRamp(c('white','black'))
+
+#Group A
+
+# 2011-06-02
+medA.02inv.2[is.na(medA.02inv.2)] <- 0
+GroupAmed.graph02 <- graph.adjacency(medA.02inv.2, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph02)$weight <- (E(GroupAmed.graph02)$weight - min(medA.02inv.2))/(max(medA.02inv.2)- min(medA.02inv.2))
+E(GroupAmed.graph02)$color = apply(c_scale(E(GroupAmed.graph02)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph02)$weight <- (E(GroupAmed.graph02)$weight)*10
+V(GroupAmed.graph02)$size <- ((PDistA.strength02-min(PDistA.strength02))/(max(PDistA.strength02)-
+                                                                            min(PDistA.strength02)))*25
+plot(GroupAmed.graph02, edge.width = E(GroupAmed.graph02)$weight, edge.col = E(GroupAmed.graph02)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-02')
+
+# 2011-06-03
+medA.03inv.2[is.na(medA.03inv.2)] <- 0
+GroupAmed.graph03 <- graph.adjacency(medA.03inv.2, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph03)$weight <- (E(GroupAmed.graph03)$weight - min(medA.03inv.2))/(max(medA.03inv.2)- min(medA.03inv.2))
+E(GroupAmed.graph03)$color = apply(c_scale(E(GroupAmed.graph03)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph03)$weight <- (E(GroupAmed.graph03)$weight)*10
+V(GroupAmed.graph03)$size <- ((PDistA.strength03-min(PDistA.strength03))/(max(PDistA.strength03)-
+                                                                            min(PDistA.strength03)))*25
+plot(GroupAmed.graph03, edge.width = E(GroupAmed.graph03)$weight, edge.col = E(GroupAmed.graph03)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-03')
+
+# 2011-06-04
+medA.04inv.2[is.na(medA.04inv.2)] <- 0
+GroupAmed.graph04 <- graph.adjacency(medA.04inv.2, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph04)$weight <- (E(GroupAmed.graph04)$weight - min(medA.04inv.2))/(max(medA.04inv.2)- min(medA.04inv.2))
+E(GroupAmed.graph04)$color = apply(c_scale(E(GroupAmed.graph04)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph04)$weight <- (E(GroupAmed.graph04)$weight)*10
+V(GroupAmed.graph04)$size <- ((PDistA.strength04-min(PDistA.strength04))/(max(PDistA.strength04)-
+                                                                            min(PDistA.strength04)))*25
+plot(GroupAmed.graph04, edge.width = E(GroupAmed.graph04)$weight, edge.col = E(GroupAmed.graph04)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-04')
+
+# 2011-06-05
+medA.05inv.2[is.na(medA.05inv.2)] <- 0
+GroupAmed.graph05 <- graph.adjacency(medA.05inv.2, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph05)$weight <- (E(GroupAmed.graph05)$weight - min(medA.05inv.2))/(max(medA.05inv.2)- min(medA.05inv.2))
+E(GroupAmed.graph05)$color = apply(c_scale(E(GroupAmed.graph05)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph05)$weight <- (E(GroupAmed.graph05)$weight)*10
+V(GroupAmed.graph05)$size <- ((PDistA.strength05-min(PDistA.strength05))/(max(PDistA.strength05)-
+                                                                            min(PDistA.strength05)))*25
+plot(GroupAmed.graph05, edge.width = E(GroupAmed.graph05)$weight, edge.col = E(GroupAmed.graph05)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-05')
+
+# 2011-06-06
+medA.06inv.2[is.na(medA.06inv.2)] <- 0
+GroupAmed.graph06 <- graph.adjacency(medA.06inv.2, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph06)$weight <- (E(GroupAmed.graph06)$weight - min(medA.06inv.2))/(max(medA.06inv.2)- min(medA.06inv.2))
+E(GroupAmed.graph06)$color = apply(c_scale(E(GroupAmed.graph06)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph06)$weight <- (E(GroupAmed.graph06)$weight)*10
+V(GroupAmed.graph06)$size <- ((PDistA.strength06-min(PDistA.strength06))/(max(PDistA.strength06)-
+                                                                            min(PDistA.strength06)))*25
+plot(GroupAmed.graph06, edge.width = E(GroupAmed.graph06)$weight, edge.col = E(GroupAmed.graph06)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-06')
+
+# 2011-06-07
+medA.07inv.2[is.na(medA.07inv.2)] <- 0
+GroupAmed.graph07 <- graph.adjacency(medA.07inv.2, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph07)$weight <- (E(GroupAmed.graph07)$weight - min(medA.07inv.2))/(max(medA.07inv.2)- min(medA.07inv.2))
+E(GroupAmed.graph07)$color = apply(c_scale(E(GroupAmed.graph07)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph07)$weight <- (E(GroupAmed.graph07)$weight)*10
+V(GroupAmed.graph07)$size <- ((PDistA.strength07-min(PDistA.strength07))/(max(PDistA.strength07)-
+                                                                            min(PDistA.strength07)))*25
+plot(GroupAmed.graph07, edge.width = E(GroupAmed.graph07)$weight, edge.col = E(GroupAmed.graph07)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-07')
+
+# 2011-06-08
+medA.08inv.2[is.na(medA.08inv.2)] <- 0
+GroupAmed.graph08 <- graph.adjacency(medA.08inv.2, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph08)$weight <- (E(GroupAmed.graph08)$weight - min(medA.08inv.2))/(max(medA.08inv.2)- min(medA.08inv.2))
+E(GroupAmed.graph08)$color = apply(c_scale(E(GroupAmed.graph08)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph08)$weight <- (E(GroupAmed.graph08)$weight)*10
+V(GroupAmed.graph08)$size <- ((PDistA.strength08-min(PDistA.strength08))/(max(PDistA.strength08)-
+                                                                            min(PDistA.strength08)))*25
+plot(GroupAmed.graph08, edge.width = E(GroupAmed.graph08)$weight, edge.col = E(GroupAmed.graph08)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-08')
+
+# 2011-06-09
+medA.09inv.2[is.na(medA.09inv.2)] <- 0
+GroupAmed.graph09 <- graph.adjacency(medA.09inv.2, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph09)$weight <- (E(GroupAmed.graph09)$weight - min(medA.09inv.2))/(max(medA.09inv.2)- min(medA.09inv.2))
+E(GroupAmed.graph09)$color = apply(c_scale(E(GroupAmed.graph09)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph09)$weight <- (E(GroupAmed.graph09)$weight)*10
+V(GroupAmed.graph09)$size <- ((PDistA.strength09-min(PDistA.strength09))/(max(PDistA.strength09)-
+                                                                            min(PDistA.strength09)))*25
+plot(GroupAmed.graph09, edge.width = E(GroupAmed.graph09)$weight, edge.col = E(GroupAmed.graph09)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-09')
+
+# 2011-06-10
+medA.10inv.2[is.na(medA.10inv.2)] <- 0
+GroupAmed.graph10 <- graph.adjacency(medA.10inv.2, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph10)$weight <- (E(GroupAmed.graph10)$weight - min(medA.10inv.2))/(max(medA.10inv.2)- min(medA.10inv.2))
+E(GroupAmed.graph10)$color = apply(c_scale(E(GroupAmed.graph10)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph10)$weight <- (E(GroupAmed.graph10)$weight)*10
+V(GroupAmed.graph10)$size <- ((PDistA.strength10-min(PDistA.strength10))/(max(PDistA.strength10)-
+                                                                            min(PDistA.strength10)))*25
+plot(GroupAmed.graph10, edge.width = E(GroupAmed.graph10)$weight, edge.col = E(GroupAmed.graph10)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-10')
+
+# 2011-06-11
+medA.11inv.2[is.na(medA.11inv.2)] <- 0
+GroupAmed.graph11 <- graph.adjacency(medA.11inv.2, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph11)$weight <- (E(GroupAmed.graph11)$weight - min(medA.11inv.2))/(max(medA.11inv.2)- min(medA.11inv.2))
+E(GroupAmed.graph11)$color = apply(c_scale(E(GroupAmed.graph11)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph11)$weight <- (E(GroupAmed.graph11)$weight)*10
+V(GroupAmed.graph11)$size <- ((PDistA.strength11-min(PDistA.strength11))/(max(PDistA.strength11)-
+                                                                            min(PDistA.strength11)))*25
+plot(GroupAmed.graph11, edge.width = E(GroupAmed.graph11)$weight, edge.col = E(GroupAmed.graph11)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-11')
+
+# 2011-06-12
+medA.12inv.2[is.na(medA.12inv.2)] <- 0
+GroupAmed.graph12 <- graph.adjacency(medA.12inv.2, mode="undirected", weighted=TRUE)
+E(GroupAmed.graph12)$weight <- (E(GroupAmed.graph12)$weight - min(medA.12inv.2))/(max(medA.12inv.2)- min(medA.12inv.2))
+E(GroupAmed.graph12)$color = apply(c_scale(E(GroupAmed.graph12)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupAmed.graph12)$weight <- (E(GroupAmed.graph12)$weight)*10
+V(GroupAmed.graph12)$size <- ((PDistA.strength12-min(PDistA.strength12))/(max(PDistA.strength12)-
+                                                                            min(PDistA.strength12)))*25
+plot(GroupAmed.graph12, edge.width = E(GroupAmed.graph12)$weight, edge.col = E(GroupAmed.graph12)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A 2011-06-12')
+```
+

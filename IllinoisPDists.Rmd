@@ -1,0 +1,413 @@
+---
+title: "Illinois Pairwise Distances 2"
+output: html_notebook
+---
+
+Consider daytime only
+
+8C2 = 28 (28 pairs in a group of 8).
+24C2 = 276 (276 pairs in a group of 24).
+
+## Group B
+
+Create pairs:
+
+```{r}
+library(combinat)
+
+GroupB.pairs = combn(groupB.ids, 2)
+```
+
+Use spatsoc to create temporal groups:
+```{r}
+library(data.table)
+GroupB.day.dt = setDT(GroupB.day.df)
+
+library(spatsoc)
+
+group_times(GroupB.day.dt, datetime = 'Time', threshold = '4 minutes')
+```
+
+```{r}
+timegroupsB = unique(GroupB.day.dt$timegroup)
+```
+
+Plot pairwise distances for each pair:
+```{r}
+par(mfrow=c(2,2))
+for(i in 1:28){
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  
+  pair.1 = GroupB.day.dt[which(GroupB.day.dt$idnum == pair.id1),]
+  pair.2 = GroupB.day.dt[which(GroupB.day.dt$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsB))
+  
+  for(i in 1:length(timegroupsB)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsB[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsB[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsB[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsB[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  plot(pair.dists, ylim = c(0, 300), main = paste(pair.id1, 'and', pair.id2, ': Distance over Time'))
+  abline(h = median(pair.dists, na.rm = TRUE), col=2)
+  abline(h = mean(pair.dists, na.rm = TRUE), col=3)
+}
+par(mfrow=c(1,1))
+```
+
+Get mean+median distance for all pairs:
+```{r}
+pairsB = c() #vector(mode = 'character', length= 28)
+meanB = c() #vector(mode = 'numeric', length = 28)
+medianB = c() #vector(mode = 'numeric', length = 28)
+
+for(i in 1:28){
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  
+  pair.1 = GroupB.day.dt[which(GroupB.day.dt$idnum == pair.id1),]
+  pair.2 = GroupB.day.dt[which(GroupB.day.dt$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsB))
+  
+  for(i in 1:length(timegroupsB)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsB[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsB[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsB[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsB[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  pairsB <- append(pairsB, paste(pair.id1, 'and', pair.id2))
+  meanB <- append(meanB, mean(pair.dists, na.rm = TRUE))
+  medianB <- append(medianB, median(pair.dists, na.rm = TRUE))
+}
+
+pair_distsB.df <- data.frame(pairsB, meanB, medianB)
+pair_distsB.df
+```
+
+Create heatmap of means and medians:
+```{r}
+pair_distsB.mean.mat <- matrix(1:64, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+pair_distsB.median.mat <- matrix(1:64, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+#set diagonal to 0
+for(i in 1:8){
+  pair_distsB.mean.mat[i, i] = 0
+  pair_distsB.median.mat[i, i] = 0
+}
+```
+
+```{r}
+#fill in means and medians
+#x = pair_distsB.mean.mat
+n = 8
+m = 1
+k = n-1
+v = n-2
+
+for(i in 1:(n-1)){
+  l = i+1
+  pair_distsB.mean.mat[l:n, i] = meanB[m:k]
+  pair_distsB.mean.mat[i, l:n] = meanB[m:k]
+  pair_distsB.median.mat[l:n, i] = medianB[m:k]
+  pair_distsB.median.mat[i, l:n] = medianB[m:k]
+  m = k + 1
+  k = k + v
+  v = v - 1
+}
+```
+
+```{r}
+par(mfrow=c(2,2))
+
+heatmap(pair_distsB.mean.mat, Rowv = NA, Colv = NA, symm = T, main = 'Mean Pairwise Distance')
+#legend(x='right', legend=c("min", "med", "max"), fill=heat.colors(3))
+
+heatmap(pair_distsB.median.mat, Rowv = NA, Colv = NA, symm = T, main = 'Median Pairwise Distance')
+#legend(x='right')
+
+par(mfrow=c(1,1))
+```
+
+pheatmap:
+```{r}
+library(pheatmap)
+#library(viridis)
+#library(ggplot2)
+
+b <- 0:50
+#my.col <- scale_colour_gradientn(colours = rev(c("darkred", "orange", "yellow", "white")))
+
+pheatmap(pair_distsB.mean.mat, color = colorRampPalette(c('black','red', 'yellow'))(20), cluster_cols = F, cluster_rows = F, treeheight_col = 0, treeheight_row = 0, cellwidth= 33, cellheight = 33, main = 'Mean Pairwise Distance - Group B')
+
+pheatmap(pair_distsB.median.mat, color = colorRampPalette(c('black','red', 'yellow'))(20), cluster_cols = F, cluster_rows = F, treeheight_col = 0, treeheight_row = 0, cellwidth= 33, cellheight = 33, main = 'Median Pairwise Distance - Group B All Days')
+#color = inferno(10, direction= -1)
+```
+
+
+## Group A
+
+Create pairs:
+
+```{r}
+library(combinat)
+
+GroupA.pairs = combn(groupA.ids, 2)
+```
+
+Use spatsoc to create temporal groups:
+```{r}
+library(data.table)
+GroupA.day.dt = setDT(GroupA.day.df)
+
+library(spatsoc)
+
+group_times(GroupA.day.dt, datetime = 'time', threshold = '4 minutes')
+```
+
+```{r}
+timegroupsA = unique(GroupA.day.dt$timegroup)
+```
+
+Too many pairs to plot all.
+
+Get mean+median distance for all pairs:
+```{r}
+pairsA = c() 
+meanA = c() 
+medianA = c() 
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.day.dt[which(GroupA.day.dt$idnum == pair.id1),]
+  pair.2 = GroupA.day.dt[which(GroupA.day.dt$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA))
+  
+  for(i in 1:length(timegroupsA)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  pairsA <- append(pairsA, paste(pair.id1, 'and', pair.id2))
+  meanA <- append(meanA, mean(pair.dists, na.rm = TRUE))
+  medianA <- append(medianA, median(pair.dists, na.rm = TRUE))
+}
+
+pair_distsA.df <- data.frame(pairsA, meanA, medianA)
+pair_distsA.df
+```
+
+Create heatmap of means and medians:
+```{r}
+pair_distsA.mean.mat <- matrix(1:576, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+pair_distsA.median.mat <- matrix(1:576, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+#set diagonal to 0
+for(i in 1:24){
+  pair_distsA.mean.mat[i, i] = 0
+  pair_distsA.median.mat[i, i] = 0
+}
+```
+
+```{r}
+#fill in means and medians
+#x = pair_distsA.mean.mat
+n = 24
+m = 1
+k = n-1
+v = n-2
+
+for(i in 1:(n-1)){
+  l = i+1
+  pair_distsA.mean.mat[l:n, i] = meanA[m:k]
+  pair_distsA.mean.mat[i, l:n] = meanA[m:k]
+  pair_distsA.median.mat[l:n, i] = medianA[m:k]
+  pair_distsA.median.mat[i, l:n] = medianA[m:k]
+  m = k + 1
+  k = k + v
+  v = v - 1
+}
+```
+
+```{r}
+library(pheatmap)
+
+pheatmap(pair_distsA.mean.mat, color = colorRampPalette(c('black','red', 'yellow'))(20), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Mean Pairwise Distance - Group A (not clustered)')
+
+pheatmap(pair_distsA.median.mat, color = colorRampPalette(c('black','red', 'yellow'))(20), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A All Days')
+
+pheatmap(pair_distsA.mean.mat, color = colorRampPalette(c('black','red', 'yellow'))(20), treeheight_col = 0, treeheight_row = 0, cellwidth= 11, cellheight = 11, main = 'Mean Pairwise Distance - Group A (clustered)')
+
+pheatmap(pair_distsA.median.mat, color = colorRampPalette(c('black','red', 'yellow'))(20), treeheight_col = 0, treeheight_row = 0, cellwidth= 11, cellheight = 11, main = 'Median Pairwise Distance - Group A (clustered)')
+```
+
+## Networks from pairwise-distance matrices
+
+```{r}
+# Group A
+
+library(igraph)
+
+#inverse since closer = better
+pair_distsA.med = 1/pair_distsA.median.mat
+
+#set inf to 0 (1/0 -> inf)
+pair_distsA.med[is.infinite(pair_distsA.med)] <- 0
+
+GroupA.graph.med <- graph.adjacency(pair_distsA.med, mode="undirected", weighted=TRUE)
+
+#Color scaling function
+c_scale <- colorRamp(c('white','grey','black'))
+
+E(GroupA.graph.med)$weight <- (E(GroupA.graph.med)$weight/max(pair_distsA.med))
+
+#Applying the color scale to edge weights.
+#rgb method is to convert colors to a character vector.
+E(GroupA.graph.med)$color = apply(c_scale(E(GroupA.graph.med)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+
+E(GroupA.graph.med)$weight <- (E(GroupA.graph.med)$weight*10)
+
+plot(GroupA.graph.med, edge.width = E(GroupA.graph.med)$weight, edge.col = E(GroupA.graph.med)$color, layout=layout.fruchterman.reingold, main = 'Network of Median Pairwise Distance - Group A')
+```
+
+```{r}
+# Group B
+
+#inverse since closer = better
+pair_distsB.med = 1/pair_distsB.median.mat
+
+#set inf to 0 (1/0 -> inf)
+pair_distsB.med[is.infinite(pair_distsB.med)] <- 0
+
+GroupB.graph.med <- graph.adjacency(pair_distsB.med, mode="undirected", weighted=TRUE)
+
+#Color scaling function
+c_scale <- colorRamp(c('white','grey','black'))
+
+E(GroupB.graph.med)$weight <- (E(GroupB.graph.med)$weight/max(pair_distsB.med))
+
+#Applying the color scale to edge weights.
+#rgb method is to convert colors to a character vector.
+E(GroupB.graph.med)$color = apply(c_scale(E(GroupB.graph.med)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+
+E(GroupB.graph.med)$weight <- (E(GroupB.graph.med)$weight*10)
+
+plot(GroupB.graph.med, edge.width = E(GroupB.graph.med)$weight, edge.col = E(GroupB.graph.med)$color, layout=layout.fruchterman.reingold, main = 'Network of Median Pairwise Distance - Group B')
+```
+
+## Node Strength
+
+```{r}
+#Group A (all days)
+n = 24
+PDistA.strength = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(pair_distsA.med[groupA.ids[i], ])
+  PDistA.strength[i] = soc
+}
+
+pdiststrnA <- data.frame(groupA.ids, PDistA.strength)
+
+#Group B (all days)
+n = 8
+PDistB.strength = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupB.ids)){
+  soc = sum(pair_distsB.med[groupB.ids[i], ])
+  PDistB.strength[i] = soc
+}
+
+pdiststrnB <- data.frame(groupB.ids, PDistB.strength)
+```
+
+#Group A graph 2:
+
+Replace all values that are less than the mean with 0:
+```{r}
+pair_distsA.med2 = pair_distsA.med
+for(i in 1:24){
+  for(j in 1:24){
+  if(pair_distsA.med[i,j] < mean(pair_distsA.med)){
+    pair_distsA.med2[i,j] = 0
+  }
+  }
+}
+```
+
+```{r}
+#coordsA <- layout.fruchterman.reingold(GroupA.graph)
+
+GroupA.graph.med2 <- graph.adjacency(pair_distsA.med2, mode="undirected", weighted=TRUE)
+
+#Color scaling function
+c_scale <- colorRamp(c('white','grey','black'))
+
+E(GroupA.graph.med2)$weight <- (E(GroupA.graph.med2)$weight/max(pair_distsA.med2))
+
+#Applying the color scale to edge weights.
+#rgb method is to convert colors to a character vector.
+E(GroupA.graph.med2)$color = apply(c_scale(E(GroupA.graph.med2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+
+E(GroupA.graph.med2)$weight <- (E(GroupA.graph.med2)$weight*10)
+V(GroupA.graph.med2)$size <- (PDistA.strength)*10
+
+plot(GroupA.graph.med2, edge.width = E(GroupA.graph.med2)$weight, edge.col = E(GroupA.graph.med2)$color, layout=coordsA, main = 'Network of Median Pairwise Distance - Group A')
+```
+# Group B
+```{r}
+#coordsB <- layout.fruchterman.reingold(GroupB.graph)
+
+GroupB.graph.med <- graph.adjacency(pair_distsB.med, mode="undirected", weighted=TRUE)
+
+#Color scaling function
+c_scale <- colorRamp(c('white','grey','black'))
+
+E(GroupB.graph.med)$weight <- (E(GroupB.graph.med)$weight/max(pair_distsB.med))
+
+#Applying the color scale to edge weights.
+#rgb method is to convert colors to a character vector.
+E(GroupB.graph.med)$color = apply(c_scale(E(GroupB.graph.med)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+
+E(GroupB.graph.med)$weight <- (E(GroupB.graph.med)$weight*10)
+V(GroupB.graph.med)$size <- (PDistB.strength)*75
+
+plot(GroupB.graph.med, edge.width = E(GroupB.graph.med)$weight, edge.col = E(GroupB.graph.med)$color, layout=coordsB, main = 'Network of Median Pairwise Distance - Group B')
+```
+
+

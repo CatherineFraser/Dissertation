@@ -1,0 +1,116 @@
+---
+title: "Node strength as a Measure of Sociality"
+output: html_notebook
+---
+
+Node strength is the analog for node degree in weighted networks.
+
+$s_i = \sum_{j = 1}^{n} W_{ij}$
+
+where:
+
+$s_i$ = strength of node i,
+n = number of nodes,
+$W_{ij}$ = weight of edge between nodes i and j.
+
+*Run IllinoisPreProcessing.Rmd and IllinoisSpatsoc2.Rmd*
+
+Networks given by freqA.mat and freqB.mat. (n x n symmetric matrices)
+
+```{r}
+#Group B (all days)
+n = 8
+groupB.strength = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupB.ids)){
+  soc = sum(freqB.mat[groupB.ids[i], ])
+  groupB.strength[i] = soc
+}
+
+nodestrnB <- data.frame(groupB.ids, groupB.strength)
+```
+
+```{r}
+#Group A (all days)
+n = 24
+groupA.strength = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.mat[groupA.ids[i], ])
+  groupA.strength[i] = soc
+}
+
+nodestrnA <- data.frame(groupA.ids, groupA.strength)
+```
+
+Examine:
+```{r}
+library(ggplot2)
+ggplot(nodestrnA, aes(x = groupA.ids, y = groupA.strength)) +geom_bar(stat='identity')
+ggplot(nodestrnB, aes(x = groupB.ids, y = groupB.strength)) +geom_bar(stat='identity')
+```
+
+```{r}
+library(igraph)
+
+GroupB.graph <- graph.adjacency(freqB.mat, mode="undirected", weighted=TRUE)
+# E(GroupB.graph)$weight is the count from the original matrix
+
+E(GroupB.graph)$weight <- (E(GroupB.graph)$weight - min(freqB.mat))/(max(freqB.mat)- min(freqB.mat))
+
+#Color scaling function
+c_scale <- colorRamp(c('white','black'))
+
+#Applying the color scale to edge weights.
+#rgb method is to convert colors to a character vector.
+E(GroupB.graph)$color = apply(c_scale(E(GroupB.graph)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+
+E(GroupB.graph)$weight <- (E(GroupB.graph)$weight)*10
+V(GroupB.graph)$size <- (groupB.strength/max(groupB.strength))*35
+
+plot(GroupB.graph, edge.width = E(GroupB.graph)$weight, edge.col = E(GroupB.graph)$color, layout=coordsB, main = 'Network of 4 Minute Interaction Frequency - Group B')
+```
+
+```{r}
+GroupA.graph2 <- graph.adjacency(freqA.mat2, mode="undirected", weighted=TRUE)
+
+#normalize
+E(GroupA.graph2)$weight <- (E(GroupA.graph2)$weight - min(freqA.mat2))/(max(freqA.mat2)- min(freqA.mat2))
+
+#Color scaling function
+c_scale <- colorRamp(c('white','black'))
+
+#Applying the color scale to edge weights.
+#rgb method is to convert colors to a character vector.
+E(GroupA.graph2)$color = apply(c_scale(E(GroupA.graph2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+
+E(GroupA.graph2)$weight <- (E(GroupA.graph2)$weight)*10
+V(GroupA.graph2)$size <- (groupA.strength)*5
+
+plot(GroupA.graph2, edge.width = E(GroupA.graph2)$weight, edge.col = E(GroupA.graph2)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A')
+```
+
+
+## Assortativity
+
+```{r}
+library(assortnet)
+
+GroupB.graph <- graph.adjacency(freqB.mat, mode="undirected", weighted=TRUE)
+V(GroupB.graph)$size <- groupB.strength
+
+assortment.continuous(freqB.mat, V(GroupB.graph)$size, weighted = TRUE) #assortnet
+
+assortativity(GroupB.graph, V(GroupB.graph)$size, directed = F) #igraph
+```
+
+```{r}
+GroupA.graph <- graph.adjacency(freqA.mat, mode="undirected", weighted=TRUE)
+V(GroupA.graph)$size <- groupA.strength
+
+assortment.continuous(freqA.mat, V(GroupA.graph)$size, weighted = TRUE) #assortnet
+
+assortativity(GroupA.graph, V(GroupA.graph)$size, directed = F) #igraph
+```
+
+

@@ -1,0 +1,592 @@
+---
+title: "Node Strength Day-by-Day"
+output: html_notebook
+---
+
+## Group A
+
+```{r}
+n = 24
+
+#2011-06-02
+groupA.strength02 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.02[groupA.ids[i], ])
+  groupA.strength02[i] = soc
+}
+nodestrnA02 <- data.frame(groupA.ids)
+nodestrnA02$strength <- groupA.strength02
+nodestrnA02$date <- unique(GroupA.day.df$date)[1]
+
+#2011-06-03
+groupA.strength03 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.03[groupA.ids[i], ])
+  groupA.strength03[i] = soc
+}
+nodestrnA03 <- data.frame(groupA.ids)
+nodestrnA03$strength <- groupA.strength03
+nodestrnA03$date <- unique(GroupA.day.df$date)[2]
+
+#2011-06-04
+groupA.strength04 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.04[groupA.ids[i], ])
+  groupA.strength04[i] = soc
+}
+nodestrnA04 <- data.frame(groupA.ids)
+nodestrnA04$strength <- groupA.strength04
+nodestrnA04$date <- unique(GroupA.day.df$date)[3]
+
+#2011-06-05
+groupA.strength05 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.05[groupA.ids[i], ])
+  groupA.strength05[i] = soc
+}
+nodestrnA05 <- data.frame(groupA.ids)
+nodestrnA05$strength <- groupA.strength05
+nodestrnA05$date <- unique(GroupA.day.df$date)[4]
+
+#2011-06-06
+groupA.strength06 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.06[groupA.ids[i], ])
+  groupA.strength06[i] = soc
+}
+nodestrnA06 <- data.frame(groupA.ids)
+nodestrnA06$strength <- groupA.strength06
+nodestrnA06$date <- unique(GroupA.day.df$date)[5]
+
+#2011-06-07
+groupA.strength07 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.07[groupA.ids[i], ])
+  groupA.strength07[i] = soc
+}
+nodestrnA07 <- data.frame(groupA.ids) 
+nodestrnA07$strength <- groupA.strength07
+nodestrnA07$date <- unique(GroupA.day.df$date)[6]
+
+#2011-06-08
+groupA.strength08 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.08[groupA.ids[i], ])
+  groupA.strength08[i] = soc
+}
+nodestrnA08 <- data.frame(groupA.ids)
+nodestrnA08$strength <- groupA.strength08
+nodestrnA08$date <- unique(GroupA.day.df$date)[7]
+
+#2011-06-09
+groupA.strength09 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.09[groupA.ids[i], ])
+  groupA.strength09[i] = soc
+}
+nodestrnA09 <- data.frame(groupA.ids)
+nodestrnA09$strength <- groupA.strength09
+nodestrnA09$date <- unique(GroupA.day.df$date)[8]
+
+#2011-06-10
+groupA.strength10 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.10[groupA.ids[i], ])
+  groupA.strength10[i] = soc
+}
+nodestrnA10 <- data.frame(groupA.ids)
+nodestrnA10$strength <- groupA.strength10
+nodestrnA10$date <- unique(GroupA.day.df$date)[9]
+
+#2011-06-11
+groupA.strength11 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.11[groupA.ids[i], ])
+  groupA.strength11[i] = soc
+}
+nodestrnA11 <- data.frame(groupA.ids)
+nodestrnA11$strength <- groupA.strength11
+nodestrnA11$date <- unique(GroupA.day.df$date)[10]
+
+#2011-06-12
+groupA.strength12 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA.12[groupA.ids[i], ])
+  groupA.strength12[i] = soc
+}
+nodestrnA12 <- data.frame(groupA.ids) 
+nodestrnA12$strength <- groupA.strength12
+nodestrnA12$date <- unique(GroupA.day.df$date)[11]
+```
+
+Want plot of sociality (node strength) per cow over time
+```{r}
+NS_listA <- list(nodestrnA02, nodestrnA03, nodestrnA04, nodestrnA05, nodestrnA06, nodestrnA07, nodestrnA08, nodestrnA09, nodestrnA10, nodestrnA11, nodestrnA12)
+
+nodestrnA.all = Reduce(function(x, y) merge(x, y, all=TRUE), NS_listA)
+```
+
+```{r}
+library(ggplot2)
+library(Polychrome)
+
+Dark24 <- createPalette(24, c('#2A95E8', '#E5629C'), range = c(10, 60)) 
+names(Dark24) <- NULL
+
+al = alphabet.colors(24)
+names(al) <- NULL
+```
+
+```{r}
+ggplot(nodestrnA.all, aes(x = date, y = strength, group = groupA.ids)) + geom_line(aes(color = groupA.ids)) + geom_point(aes(color = groupA.ids)) + scale_color_manual(values = al) + labs(title = 'Plot of Sociality over time - Group A (4 Minute Interaction)', x = 'Date', y = 'Node Strength (Sociality)', color = 'Animal ID')
+```
+
+## Group B
+
+```{r}
+n = 8
+
+# 2011-10-24
+groupB.strength24 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupB.ids)){
+  soc = sum(freqB.24[groupB.ids[i], ])
+  groupB.strength24[i] = soc
+}
+
+nodestrnB24 <- data.frame(groupB.ids)
+nodestrnB24$strength <- groupB.strength24
+nodestrnB24$date <- unique(GroupB.day.df$date)[1]
+
+# 2011-10-25
+groupB.strength25 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupB.ids)){
+  soc = sum(freqB.25[groupB.ids[i], ])
+  groupB.strength25[i] = soc
+}
+
+nodestrnB25 <- data.frame(groupB.ids)
+nodestrnB25$strength <- groupB.strength25
+nodestrnB25$date <- unique(GroupB.day.df$date)[2]
+
+# 2011-10-26
+groupB.strength26 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupB.ids)){
+  soc = sum(freqB.26[groupB.ids[i], ])
+  groupB.strength26[i] = soc
+}
+
+nodestrnB26 <- data.frame(groupB.ids)
+nodestrnB26$strength <- groupB.strength26
+nodestrnB26$date <- unique(GroupB.day.df$date)[3]
+
+# 2011-10-27
+groupB.strength27 = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupB.ids)){
+  soc = sum(freqB.27[groupB.ids[i], ])
+  groupB.strength27[i] = soc
+}
+
+nodestrnB27 <- data.frame(groupB.ids)
+nodestrnB27$strength <- groupB.strength27
+nodestrnB27$date <- unique(GroupB.day.df$date)[4]
+```
+
+```{r}
+NS_listB <- list(nodestrnB24, nodestrnB25, nodestrnB26, nodestrnB27)
+
+nodestrnB.all = Reduce(function(x, y) merge(x, y, all=TRUE), NS_listB)
+```
+
+```{r}
+library(ggplot2)
+library(Polychrome)
+
+Dark24 <- createPalette(24, c('#2A95E8', '#E5629C'), range = c(10, 60)) 
+names(Dark24) <- NULL
+
+al = alphabet.colors(24)
+names(al) <- NULL
+```
+
+```{r}
+ggplot(nodestrnB.all, aes(x = date, y = strength, group = groupB.ids)) + geom_line(aes(color = groupB.ids)) + geom_point(aes(color = groupB.ids)) + scale_color_manual(values = Dark24) + labs(title = 'Plot of Sociality over time - Group B (4 Minute Interaction)', x = 'Date', y = 'Node Strength (Sociality)', color = 'Animal ID')
+```
+
+# Network Graphs
+```{r}
+library(igraph)
+c_scale <- colorRamp(c('white','black'))
+
+#Group A
+coordsA <- layout.fruchterman.reingold(GroupA.graph)
+
+# 2011-06-02
+GroupA.graph02 <- graph.adjacency(freqA.02, mode="undirected", weighted=TRUE)
+E(GroupA.graph02)$weight <- (E(GroupA.graph02)$weight - min(freqA.02))/(max(freqA.02)- min(freqA.02))
+E(GroupA.graph02)$color = apply(c_scale(E(GroupA.graph02)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph02)$weight <- (E(GroupA.graph02)$weight)*10
+V(GroupA.graph02)$size <- (groupA.strength02/max(groupA.strength02))*25
+plot(GroupA.graph02, edge.width = E(GroupA.graph02)$weight, edge.col = E(GroupA.graph02)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-02')
+
+# 2011-06-03
+freqA.03[is.nan(freqA.03)] <- 0
+GroupA.graph03 <- graph.adjacency(freqA.03, mode="undirected", weighted=TRUE)
+E(GroupA.graph03)$weight <- (E(GroupA.graph03)$weight - min(freqA.03))/(max(freqA.03)- min(freqA.03))
+E(GroupA.graph03)$color = apply(c_scale(E(GroupA.graph03)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph03)$weight <- (E(GroupA.graph03)$weight)*10
+V(GroupA.graph03)$size <- (groupA.strength03/max(groupA.strength03))*25
+plot(GroupA.graph03, edge.width = E(GroupA.graph03)$weight, edge.col = E(GroupA.graph03)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-03')
+
+# 2011-06-04
+freqA.04[is.nan(freqA.04)] <- 0
+GroupA.graph04 <- graph.adjacency(freqA.04, mode="undirected", weighted=TRUE)
+E(GroupA.graph04)$weight <- (E(GroupA.graph04)$weight - min(freqA.04))/(max(freqA.04)- min(freqA.04))
+E(GroupA.graph04)$color = apply(c_scale(E(GroupA.graph04)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph04)$weight <- (E(GroupA.graph04)$weight)*10
+V(GroupA.graph04)$size <- (groupA.strength04/max(groupA.strength04))*25
+plot(GroupA.graph04, edge.width = E(GroupA.graph04)$weight, edge.col = E(GroupA.graph04)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-04')
+
+# 2011-06-05
+freqA.05[is.nan(freqA.05)] <- 0
+GroupA.graph05 <- graph.adjacency(freqA.05, mode="undirected", weighted=TRUE)
+E(GroupA.graph05)$weight <- (E(GroupA.graph05)$weight - min(freqA.05))/(max(freqA.05)- min(freqA.05))
+E(GroupA.graph05)$color = apply(c_scale(E(GroupA.graph05)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph05)$weight <- (E(GroupA.graph05)$weight)*10
+V(GroupA.graph05)$size <- (groupA.strength05/max(groupA.strength05))*25
+plot(GroupA.graph05, edge.width = E(GroupA.graph05)$weight, edge.col = E(GroupA.graph05)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-05')
+
+# 2011-06-06
+freqA.06[is.nan(freqA.06)] <- 0
+GroupA.graph06 <- graph.adjacency(freqA.06, mode="undirected", weighted=TRUE)
+E(GroupA.graph06)$weight <- (E(GroupA.graph06)$weight - min(freqA.06))/(max(freqA.06)- min(freqA.06))
+E(GroupA.graph06)$color = apply(c_scale(E(GroupA.graph06)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph06)$weight <- (E(GroupA.graph06)$weight)*10
+V(GroupA.graph06)$size <- (groupA.strength06/max(groupA.strength06))*25
+plot(GroupA.graph06, edge.width = E(GroupA.graph06)$weight, edge.col = E(GroupA.graph06)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-06')
+
+# 2011-06-07
+freqA.07[is.nan(freqA.07)] <- 0
+GroupA.graph07 <- graph.adjacency(freqA.07, mode="undirected", weighted=TRUE)
+E(GroupA.graph07)$weight <- (E(GroupA.graph07)$weight - min(freqA.07))/(max(freqA.07)- min(freqA.07))
+E(GroupA.graph07)$color = apply(c_scale(E(GroupA.graph07)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph07)$weight <- (E(GroupA.graph07)$weight)*10
+V(GroupA.graph07)$size <- (groupA.strength07/max(groupA.strength07))*25
+plot(GroupA.graph07, edge.width = E(GroupA.graph07)$weight, edge.col = E(GroupA.graph07)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-07')
+
+# 2011-06-08
+freqA.08[is.nan(freqA.08)] <- 0
+GroupA.graph08 <- graph.adjacency(freqA.08, mode="undirected", weighted=TRUE)
+E(GroupA.graph08)$weight <- (E(GroupA.graph08)$weight - min(freqA.08))/(max(freqA.08)- min(freqA.08))
+E(GroupA.graph08)$color = apply(c_scale(E(GroupA.graph08)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph08)$weight <- (E(GroupA.graph08)$weight)*10
+V(GroupA.graph08)$size <- (groupA.strength08/max(groupA.strength08))*25
+plot(GroupA.graph08, edge.width = E(GroupA.graph08)$weight, edge.col = E(GroupA.graph08)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-08')
+
+# 2011-06-09
+freqA.09[is.nan(freqA.09)] <- 0
+GroupA.graph09 <- graph.adjacency(freqA.09, mode="undirected", weighted=TRUE)
+E(GroupA.graph09)$weight <- (E(GroupA.graph09)$weight - min(freqA.09))/(max(freqA.09)- min(freqA.09))
+E(GroupA.graph09)$color = apply(c_scale(E(GroupA.graph09)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph09)$weight <- (E(GroupA.graph09)$weight)*10
+V(GroupA.graph09)$size <- (groupA.strength09/max(groupA.strength09))*25
+plot(GroupA.graph09, edge.width = E(GroupA.graph09)$weight, edge.col = E(GroupA.graph08)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-09')
+
+# 2011-06-10
+freqA.10[is.nan(freqA.10)] <- 0
+GroupA.graph10 <- graph.adjacency(freqA.10, mode="undirected", weighted=TRUE)
+E(GroupA.graph10)$weight <- (E(GroupA.graph10)$weight - min(freqA.10))/(max(freqA.10)- min(freqA.10))
+E(GroupA.graph10)$color = apply(c_scale(E(GroupA.graph10)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph10)$weight <- (E(GroupA.graph10)$weight)*10
+V(GroupA.graph10)$size <- (groupA.strength10/max(groupA.strength10))*25
+plot(GroupA.graph10, edge.width = E(GroupA.graph10)$weight, edge.col = E(GroupA.graph10)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-10')
+
+# 2011-06-11
+freqA.11[is.nan(freqA.11)] <- 0
+GroupA.graph11 <- graph.adjacency(freqA.11, mode="undirected", weighted=TRUE)
+E(GroupA.graph11)$weight <- (E(GroupA.graph11)$weight - min(freqA.11))/(max(freqA.11)- min(freqA.11))
+E(GroupA.graph11)$color = apply(c_scale(E(GroupA.graph11)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph11)$weight <- (E(GroupA.graph11)$weight)*10
+V(GroupA.graph11)$size <- (groupA.strength11/max(groupA.strength11))*25
+plot(GroupA.graph11, edge.width = E(GroupA.graph11)$weight, edge.col = E(GroupA.graph11)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-11')
+
+# 2011-06-12
+freqA.12[is.nan(freqA.12)] <- 0
+GroupA.graph12 <- graph.adjacency(freqA.12, mode="undirected", weighted=TRUE)
+E(GroupA.graph12)$weight <- (E(GroupA.graph12)$weight - min(freqA.12))/(max(freqA.12)- min(freqA.12))
+E(GroupA.graph12)$color = apply(c_scale(E(GroupA.graph12)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph12)$weight <- (E(GroupA.graph12)$weight)*10
+V(GroupA.graph12)$size <- (groupA.strength12/max(groupA.strength12))*25
+plot(GroupA.graph12, edge.width = E(GroupA.graph12)$weight, edge.col = E(GroupA.graph12)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-12')
+```
+
+```{r}
+# Group B
+#coordsB <- layout.fruchterman.reingold(GroupB.graph)
+
+# 2011-10-24
+GroupB.graph24 <- graph.adjacency(freqB.24, mode="undirected", weighted=TRUE)
+E(GroupB.graph24)$weight <- (E(GroupB.graph24)$weight - min(freqB.24))/(max(freqB.24)- min(freqB.24))
+E(GroupB.graph24)$color = apply(c_scale(E(GroupB.graph24)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupB.graph24)$weight <- (E(GroupB.graph24)$weight)*10
+V(GroupB.graph24)$size <- (groupB.strength24/max(groupB.strength24))*35
+plot(GroupB.graph24, edge.width = E(GroupB.graph24)$weight, edge.col = E(GroupB.graph24)$color, layout=coordsB, main = 'Network of 4 Minute Interaction Frequency - Group B 2011-10-24')
+
+# 2011-10-25
+GroupB.graph25 <- graph.adjacency(freqB.25, mode="undirected", weighted=TRUE)
+E(GroupB.graph25)$weight <- (E(GroupB.graph25)$weight - min(freqB.25))/(max(freqB.25)- min(freqB.25))
+E(GroupB.graph25)$color = apply(c_scale(E(GroupB.graph25)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupB.graph25)$weight <- (E(GroupB.graph25)$weight)*10
+V(GroupB.graph25)$size <- (groupB.strength25/max(groupB.strength25))*35
+plot(GroupB.graph25, edge.width = E(GroupB.graph25)$weight, edge.col = E(GroupB.graph25)$color, layout=coordsB, main = 'Network of 4 Minute Interaction Frequency - Group B 2011-10-25')
+
+# 2011-10-26
+GroupB.graph26 <- graph.adjacency(freqB.26, mode="undirected", weighted=TRUE)
+E(GroupB.graph26)$weight <- (E(GroupB.graph26)$weight - min(freqB.26))/(max(freqB.26)- min(freqB.26))
+E(GroupB.graph26)$color = apply(c_scale(E(GroupB.graph26)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupB.graph26)$weight <- (E(GroupB.graph26)$weight)*10
+V(GroupB.graph26)$size <- (groupB.strength26/max(groupB.strength26))*35
+plot(GroupB.graph26, edge.width = E(GroupB.graph26)$weight, edge.col = E(GroupB.graph26)$color, layout=coordsB, main = 'Network of 4 Minute Interaction Frequency - Group B 2011-10-26')
+
+# 2011-10-27
+GroupB.graph27 <- graph.adjacency(freqB.27, mode="undirected", weighted=TRUE)
+E(GroupB.graph27)$weight <- (E(GroupB.graph27)$weight - min(freqB.27))/(max(freqB.27)- min(freqB.27))
+E(GroupB.graph27)$color = apply(c_scale(E(GroupB.graph27)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupB.graph27)$weight <- (E(GroupB.graph27)$weight)*10
+V(GroupB.graph27)$size <- (groupB.strength27/max(groupB.strength27))*35
+plot(GroupB.graph27, edge.width = E(GroupB.graph27)$weight, edge.col = E(GroupB.graph27)$color, layout=coordsB, main = 'Network of 4 Minute Interaction Frequency - Group B 2011-10-27')
+```
+
+# Get rid of half Group A edges
+
+```{r}
+# 2011-06-02
+freqA.02.2 = freqA.02
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA.02[i,j] < mean(freqA.02)){
+    freqA.02.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-03
+freqA.03.2 = freqA.03
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA.03[i,j] < mean(freqA.03)){
+    freqA.03.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-04
+freqA.04.2 = freqA.04
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA.04[i,j] < mean(freqA.04)){
+    freqA.04.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-05
+freqA.05.2 = freqA.05
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA.05[i,j] < mean(freqA.05)){
+    freqA.05.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-06
+freqA.06.2 = freqA.06
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA.06[i,j] < mean(freqA.06)){
+    freqA.06.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-07
+freqA.07.2 = freqA.07
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA.07[i,j] < mean(freqA.07)){
+    freqA.07.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-08
+freqA.08.2 = freqA.08
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA.08[i,j] < mean(freqA.08)){
+    freqA.08.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-09
+freqA.09.2 = freqA.09
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA.09[i,j] < mean(freqA.09)){
+    freqA.09.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-10
+freqA.10.2 = freqA.10
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA.10[i,j] < mean(freqA.10)){
+    freqA.10.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-11
+freqA.11.2 = freqA.11
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA.11[i,j] < mean(freqA.11)){
+    freqA.11.2[i,j] = 0
+  }
+  }
+}
+
+# 2011-06-12
+freqA.12.2 = freqA.12
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA.12[i,j] < mean(freqA.12)){
+    freqA.12.2[i,j] = 0
+  }
+  }
+}
+```
+
+```{r}
+library(igraph)
+c_scale <- colorRamp(c('white','black'))
+
+#Group A
+
+# 2011-06-02
+GroupA.graph02.2 <- graph.adjacency(freqA.02.2, mode="undirected", weighted=TRUE)
+E(GroupA.graph02.2)$weight <- (E(GroupA.graph02.2)$weight - min(freqA.02.2))/(max(freqA.02.2)- min(freqA.02.2))
+E(GroupA.graph02.2)$color = apply(c_scale(E(GroupA.graph02.2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph02.2)$weight <- (E(GroupA.graph02.2)$weight)*10
+V(GroupA.graph02.2)$size <- (groupA.strength02/max(groupA.strength02))*25
+#coordsA <- layout.fruchterman.reingold(GroupA.graph02.2)
+plot(GroupA.graph02.2, edge.width = E(GroupA.graph02.2)$weight, edge.col = E(GroupA.graph02.2)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A 2011-06-02')
+
+# 2011-06-03
+freqA.03.2[is.nan(freqA.03.2)] <- 0
+GroupA.graph03.2 <- graph.adjacency(freqA.03.2, mode="undirected", weighted=TRUE)
+E(GroupA.graph03.2)$weight <- (E(GroupA.graph03.2)$weight - min(freqA.03.2))/(max(freqA.03.2)- min(freqA.03.2))
+E(GroupA.graph03.2)$color = apply(c_scale(E(GroupA.graph03.2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph03.2)$weight <- (E(GroupA.graph03.2)$weight)*10
+V(GroupA.graph03.2)$size <- (groupA.strength03/max(groupA.strength03))*25
+plot(GroupA.graph03.2, edge.width = E(GroupA.graph03.2)$weight, edge.col = E(GroupA.graph03.2)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A 2011-06-03')
+
+# 2011-06-04
+freqA.04.2[is.nan(freqA.04.2)] <- 0
+GroupA.graph04.2 <- graph.adjacency(freqA.04.2, mode="undirected", weighted=TRUE)
+E(GroupA.graph04.2)$weight <- (E(GroupA.graph04.2)$weight - min(freqA.04.2))/(max(freqA.04.2)- min(freqA.04.2))
+E(GroupA.graph04.2)$color = apply(c_scale(E(GroupA.graph04.2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph04.2)$weight <- (E(GroupA.graph04.2)$weight)*10
+V(GroupA.graph04.2)$size <- (groupA.strength04/max(groupA.strength04))*25
+plot(GroupA.graph04.2, edge.width = E(GroupA.graph04.2)$weight, edge.col = E(GroupA.graph04.2)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A 2011-06-04')
+
+# 2011-06-05
+freqA.05.2[is.nan(freqA.05.2)] <- 0
+GroupA.graph05.2 <- graph.adjacency(freqA.05.2, mode="undirected", weighted=TRUE)
+E(GroupA.graph05.2)$weight <- (E(GroupA.graph05.2)$weight - min(freqA.05.2))/(max(freqA.05.2)- min(freqA.05.2))
+E(GroupA.graph05.2)$color = apply(c_scale(E(GroupA.graph05.2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph05.2)$weight <- (E(GroupA.graph05.2)$weight)*10
+V(GroupA.graph05.2)$size <- (groupA.strength05/max(groupA.strength05))*25
+plot(GroupA.graph05.2, edge.width = E(GroupA.graph05.2)$weight, edge.col = E(GroupA.graph05.2)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A 2011-06-05')
+
+# 2011-06-06
+freqA.06.2[is.nan(freqA.06.2)] <- 0
+GroupA.graph06.2 <- graph.adjacency(freqA.06.2, mode="undirected", weighted=TRUE)
+E(GroupA.graph06.2)$weight <- (E(GroupA.graph06.2)$weight - min(freqA.06.2))/(max(freqA.06.2)- min(freqA.06.2))
+E(GroupA.graph06.2)$color = apply(c_scale(E(GroupA.graph06.2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph06.2)$weight <- (E(GroupA.graph06.2)$weight)*10
+V(GroupA.graph06.2)$size <- (groupA.strength06/max(groupA.strength06))*25
+plot(GroupA.graph06.2, edge.width = E(GroupA.graph06.2)$weight, edge.col = E(GroupA.graph06.2)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A 2011-06-06')
+
+# 2011-06-07
+freqA.07.2[is.nan(freqA.07.2)] <- 0
+GroupA.graph07.2 <- graph.adjacency(freqA.07.2, mode="undirected", weighted=TRUE)
+E(GroupA.graph07.2)$weight <- (E(GroupA.graph07.2)$weight - min(freqA.07.2))/(max(freqA.07.2)- min(freqA.07.2))
+E(GroupA.graph07.2)$color = apply(c_scale(E(GroupA.graph07.2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph07.2)$weight <- (E(GroupA.graph07.2)$weight)*10
+V(GroupA.graph07.2)$size <- (groupA.strength07/max(groupA.strength07))*25
+plot(GroupA.graph07.2, edge.width = E(GroupA.graph07.2)$weight, edge.col = E(GroupA.graph07.2)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A 2011-06-07')
+
+# 2011-06-08
+freqA.08.2[is.nan(freqA.08.2)] <- 0
+GroupA.graph08.2 <- graph.adjacency(freqA.08.2, mode="undirected", weighted=TRUE)
+E(GroupA.graph08.2)$weight <- (E(GroupA.graph08.2)$weight - min(freqA.08.2))/(max(freqA.08.2)- min(freqA.08.2))
+E(GroupA.graph08.2)$color = apply(c_scale(E(GroupA.graph08.2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph08.2)$weight <- (E(GroupA.graph08.2)$weight)*10
+V(GroupA.graph08.2)$size <- (groupA.strength08/max(groupA.strength08))*25
+plot(GroupA.graph08.2, edge.width = E(GroupA.graph08.2)$weight, edge.col = E(GroupA.graph08.2)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A 2011-06-08')
+
+# 2011-06-09
+freqA.09.2[is.nan(freqA.09.2)] <- 0
+GroupA.graph09.2 <- graph.adjacency(freqA.09.2, mode="undirected", weighted=TRUE)
+E(GroupA.graph09.2)$weight <- (E(GroupA.graph09.2)$weight - min(freqA.09.2))/(max(freqA.09.2)- min(freqA.09.2))
+E(GroupA.graph09.2)$color = apply(c_scale(E(GroupA.graph09.2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph09.2)$weight <- (E(GroupA.graph09.2)$weight)*10
+V(GroupA.graph09.2)$size <- (groupA.strength09/max(groupA.strength09))*25
+plot(GroupA.graph09.2, edge.width = E(GroupA.graph09.2)$weight, edge.col = E(GroupA.graph08)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A 2011-06-09')
+
+# 2011-06-10
+freqA.10.2[is.nan(freqA.10.2)] <- 0
+GroupA.graph10.2 <- graph.adjacency(freqA.10.2, mode="undirected", weighted=TRUE)
+E(GroupA.graph10.2)$weight <- (E(GroupA.graph10.2)$weight - min(freqA.10.2))/(max(freqA.10.2)- min(freqA.10.2))
+E(GroupA.graph10.2)$color = apply(c_scale(E(GroupA.graph10.2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph10.2)$weight <- (E(GroupA.graph10.2)$weight)*10
+V(GroupA.graph10.2)$size <- (groupA.strength10/max(groupA.strength10))*25
+plot(GroupA.graph10.2, edge.width = E(GroupA.graph10.2)$weight, edge.col = E(GroupA.graph10.2)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A 2011-06-10')
+
+# 2011-06-11
+freqA.11.2[is.nan(freqA.11.2)] <- 0
+GroupA.graph11.2 <- graph.adjacency(freqA.11.2, mode="undirected", weighted=TRUE)
+E(GroupA.graph11.2)$weight <- (E(GroupA.graph11.2)$weight - min(freqA.11.2))/(max(freqA.11.2)- min(freqA.11.2))
+E(GroupA.graph11.2)$color = apply(c_scale(E(GroupA.graph11.2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph11.2)$weight <- (E(GroupA.graph11.2)$weight)*10
+V(GroupA.graph11.2)$size <- (groupA.strength11/max(groupA.strength11))*25
+plot(GroupA.graph11.2, edge.width = E(GroupA.graph11.2)$weight, edge.col = E(GroupA.graph11.2)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A 2011-06-11')
+
+# 2011-06-12
+freqA.12.2[is.nan(freqA.12.2)] <- 0
+GroupA.graph12.2 <- graph.adjacency(freqA.12.2, mode="undirected", weighted=TRUE)
+E(GroupA.graph12.2)$weight <- (E(GroupA.graph12.2)$weight - min(freqA.12.2))/(max(freqA.12.2)- min(freqA.12.2))
+E(GroupA.graph12.2)$color = apply(c_scale(E(GroupA.graph12.2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph12.2)$weight <- (E(GroupA.graph12.2)$weight)*10
+V(GroupA.graph12.2)$size <- (groupA.strength12/max(groupA.strength12))*25
+plot(GroupA.graph12.2, edge.width = E(GroupA.graph12.2)$weight, edge.col = E(GroupA.graph12.2)$color, layout=coordsA, main = 'Network of 4 Minute Interaction Frequency - Group A 2011-06-12')
+```

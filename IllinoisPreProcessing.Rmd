@@ -1,0 +1,194 @@
+---
+title: "Illinois Pre-processing"
+output: html_notebook
+---
+
+## Group A
+
+Read in each dataframe:
+```{r}
+library(readxl)
+
+root = "C:\\Users\\User\\OneDrive - University College Cork\\Documents\\MSc\\Thesis\\TwoGroupsOfCowsData\\File S1\\GPS data of Group A\\"
+
+groupA.files = list.files(path = root)
+
+for(i in 1:length(groupA.files)) {                              # Head of for-loop
+  assign(paste0("GroupA", i, '.df'),                                   # Read and store data frames
+         read_excel(paste0(root, groupA.files[i])))
+}
+```
+Get list of id numbers:
+```{r}
+groupA.ids = vector('character', 24)
+for(i in 1:length(groupA.files)) {
+  groupA.ids[i] = substr(groupA.files[i], 1, 4)
+}
+```
+
+Add id numbers to dataframes:
+```{r}
+GroupA1.df$idnum = groupA.ids[1]
+GroupA2.df$idnum = groupA.ids[2]
+GroupA3.df$idnum = groupA.ids[3]
+GroupA4.df$idnum = groupA.ids[4]
+GroupA5.df$idnum = groupA.ids[5]
+GroupA6.df$idnum = groupA.ids[6]
+GroupA7.df$idnum = groupA.ids[7]
+GroupA8.df$idnum = groupA.ids[8]
+GroupA9.df$idnum = groupA.ids[9]
+GroupA10.df$idnum = groupA.ids[10]
+GroupA11.df$idnum = groupA.ids[11]
+GroupA12.df$idnum = groupA.ids[12]
+GroupA13.df$idnum = groupA.ids[13]
+GroupA14.df$idnum = groupA.ids[14]
+GroupA15.df$idnum = groupA.ids[15]
+GroupA16.df$idnum = groupA.ids[16]
+GroupA17.df$idnum = groupA.ids[17]
+GroupA18.df$idnum = groupA.ids[18]
+GroupA19.df$idnum = groupA.ids[19]
+GroupA20.df$idnum = groupA.ids[20]
+GroupA21.df$idnum = groupA.ids[21]
+GroupA22.df$idnum = groupA.ids[22]
+GroupA23.df$idnum = groupA.ids[23]
+GroupA24.df$idnum = groupA.ids[24]
+```
+
+Cows X011 (3) and X004 (2) have variable 'Time' instead of 'time':
+```{r}
+library(dplyr)
+
+GroupA2.df = GroupA2.df %>% rename(time = Time)
+GroupA3.df = GroupA3.df %>% rename(time = Time)
+```
+
+Merge dataframes:
+```{r}
+#put all data frames into list
+df_listA <- list(GroupA1.df, GroupA2.df, GroupA3.df, GroupA4.df, GroupA5.df, GroupA6.df, GroupA7.df, GroupA8.df, GroupA9.df, GroupA10.df, GroupA11.df, GroupA12.df, GroupA13.df, GroupA14.df, GroupA15.df, GroupA16.df, GroupA17.df, GroupA18.df, GroupA19.df, GroupA20.df, GroupA21.df, GroupA22.df, GroupA23.df, GroupA24.df)      
+
+#merge all data frames together
+GroupA.df = Reduce(function(x, y) merge(x, y, all=TRUE), df_listA)
+```
+
+Convert time from seconds to POSIXct:
+```{r}
+#run only once!
+GroupA.df$time.seconds <- GroupA.df$time
+
+library(lubridate)
+GroupA.df$time = as_datetime(GroupA.df$time, origin = '2011-06-02 00:00:00 CST')
+```
+
+Day/night split:
+-	June 2nd 2011 – sunrise 05:25, sunset 20:16
+-	June 10th 2011 – sunrise 05:23, sunset 20:21
+
+Set: sunrise 05:20, sunset 20:20
+
+```{r}
+GroupA.times = vector('character', nrow(GroupA.df))
+for(i in 1:nrow(GroupA.df)){
+  time.hms = format(GroupA.df$time[i], format = '%H:%M:%S')
+  if(time.hms >= '05:20:00' & time.hms <= '20:20:00'){
+    GroupA.times[i] = 'day'
+  }
+  else{
+    GroupA.times[i] = 'night'
+  }
+}
+
+#add column to data frame
+GroupA.df$day.night = GroupA.times
+```
+
+```{r}
+#Split data by day/night
+GroupA.day.df <- GroupA.df[which(GroupA.df$day.night == 'day'), ]
+GroupA.night.df <- GroupA.df[which(GroupA.df$day.night == 'night'), ]
+```
+
+## Group B
+
+code from https://statisticsglobe.com/r-write-read-multiple-csv-files-for-loop :
+```{r}
+root = "C:\\Users\\User\\OneDrive - University College Cork\\Documents\\MSc\\Thesis\\TwoGroupsOfCowsData\\File S1\\GPS data of Group B\\"
+
+groupB.files = list.files(path = root)
+
+for(i in 1:length(groupB.files)) {                              # Head of for-loop
+  assign(paste0("GroupB", i, '.df'),                                   # Read and store data frames
+         read_excel(paste0(root, groupB.files[i])))
+}
+```
+
+```{r}
+#Add ID numbers to data frames
+groupB.ids = vector('character', 8)
+for(i in 1:length(groupB.files)) {
+  groupB.ids[i] = substr(groupB.files[i], 1, 5)
+}
+
+GroupB1.df$idnum = groupB.ids[1]
+GroupB2.df$idnum = groupB.ids[2]
+GroupB3.df$idnum = groupB.ids[3]
+GroupB4.df$idnum = groupB.ids[4]
+GroupB5.df$idnum = groupB.ids[5]
+GroupB6.df$idnum = groupB.ids[6]
+GroupB7.df$idnum = groupB.ids[7]
+GroupB8.df$idnum = groupB.ids[8]
+```
+
+Merge groups:
+(code from https://www.statology.org/merge-multiple-data-frames-in-r/)
+```{r}
+#put all data frames into list
+df_list <- list(GroupB1.df, GroupB2.df, GroupB3.df, GroupB4.df, GroupB5.df, GroupB6.df, GroupB7.df, GroupB8.df)      
+
+#merge all data frames together
+GroupB.all.df = Reduce(function(x, y) merge(x, y, all=TRUE), df_list)  
+```
+
+Convert time from seconds to POSIXct:
+```{r}
+#run only once!
+GroupB.all.df$time.seconds <- GroupB.all.df$Time
+
+library(lubridate)
+#library(data.table)
+
+#as_datetime(seconds, origin = '2011-10-24 10:00:00 CST')
+GroupB.all.df$Time = as_datetime(GroupB.all.df$Time, origin = '2011-10-24 00:00:00')
+```
+
+
+daytime/nighttime split:
+
+-	Oct 24th  2011 – sunrise 07:16, sunset 18:05
+-	Oct 28th  2011 – sunrise 07:20, sunset 18:00
+
+set: sunrise 07:15, sunset 18:00.
+
+```{r}
+GroupB.times = vector('character', nrow(GroupB.all.df))
+for(i in 1:nrow(GroupB.all.df)){
+  time.hms = format(GroupB.all.df$Time[i], format = '%H:%M:%S')
+  if(time.hms >= '07:15:00' & time.hms <= '18:00:00'){
+    GroupB.times[i] = 'day'
+  }
+  else{
+    GroupB.times[i] = 'night'
+  }
+}
+
+#add column to data frame
+GroupB.all.df$day.night = GroupB.times
+```
+
+```{r}
+#Split data by day/night
+GroupB.day.df <- GroupB.all.df[which(GroupB.all.df$day.night == 'day'), ]
+GroupB.night.df <- GroupB.all.df[which(GroupB.all.df$day.night == 'night'), ]
+```
+
+

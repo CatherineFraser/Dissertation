@@ -1,0 +1,761 @@
+---
+title: "Day by day networks"
+output: html_notebook
+---
+
+Split into days:
+
+```{r}
+#add date column
+GroupA.day.df$date = format(GroupA.day.df$time, format = '%Y-%m-%d')
+
+GroupB.day.df$date = format(GroupB.day.df$Time, format = '%Y-%m-%d')
+```
+
+```{r}
+#Group A
+GroupA.02 = GroupA.day.df[which(GroupA.day.df$date == '2011-06-02'), ]
+GroupA.03 = GroupA.day.df[which(GroupA.day.df$date == '2011-06-03'), ]
+GroupA.04 = GroupA.day.df[which(GroupA.day.df$date == '2011-06-04'), ]
+GroupA.05 = GroupA.day.df[which(GroupA.day.df$date == '2011-06-05'), ]
+GroupA.06 = GroupA.day.df[which(GroupA.day.df$date == '2011-06-06'), ]
+GroupA.07 = GroupA.day.df[which(GroupA.day.df$date == '2011-06-07'), ]
+GroupA.08 = GroupA.day.df[which(GroupA.day.df$date == '2011-06-08'), ]
+GroupA.09 = GroupA.day.df[which(GroupA.day.df$date == '2011-06-09'), ]
+GroupA.10 = GroupA.day.df[which(GroupA.day.df$date == '2011-06-10'), ]
+GroupA.11 = GroupA.day.df[which(GroupA.day.df$date == '2011-06-11'), ]
+GroupA.12 = GroupA.day.df[which(GroupA.day.df$date == '2011-06-12'), ]
+
+#Group B
+GroupB.24 = GroupB.day.df[which(GroupB.day.df$date == '2011-10-24'), ]
+GroupB.25 = GroupB.day.df[which(GroupB.day.df$date == '2011-10-25'), ]
+GroupB.26 = GroupB.day.df[which(GroupB.day.df$date == '2011-10-26'), ]
+GroupB.27 = GroupB.day.df[which(GroupB.day.df$date == '2011-10-27'), ]
+```
+
+```{r}
+#create lists
+#GroupA_daylist <- list(GroupA.02, GroupA.03, GroupA.04, GroupA.05, GroupA.06, GroupA.07, GroupA.08, GroupA.09, #GroupA.10, GroupA.11, GroupA.12)
+
+#GroupB_daylist <- list(GroupB.24, GroupB.25, GroupB.26, GroupB.27)
+```
+
+
+Spatsoc, frequency matrices:
+
+```{r}
+library(data.table)
+library(spatsoc)
+
+# Group A
+
+GroupA.02 = setDT(GroupA.02)
+group_times(GroupA.02, datetime = 'time', threshold = '4 minutes')
+
+GroupA.03 = setDT(GroupA.03)
+group_times(GroupA.03, datetime = 'time', threshold = '4 minutes')
+
+GroupA.04 = setDT(GroupA.04)
+group_times(GroupA.04, datetime = 'time', threshold = '4 minutes')
+
+GroupA.05 = setDT(GroupA.05)
+group_times(GroupA.05, datetime = 'time', threshold = '4 minutes')
+
+GroupA.06 = setDT(GroupA.06)
+group_times(GroupA.06, datetime = 'time', threshold = '4 minutes')
+
+GroupA.07 = setDT(GroupA.07)
+group_times(GroupA.07, datetime = 'time', threshold = '4 minutes')
+
+GroupA.08 = setDT(GroupA.08)
+group_times(GroupA.08, datetime = 'time', threshold = '4 minutes')
+
+GroupA.09 = setDT(GroupA.09)
+group_times(GroupA.09, datetime = 'time', threshold = '4 minutes')
+
+GroupA.10 = setDT(GroupA.10)
+group_times(GroupA.10, datetime = 'time', threshold = '4 minutes')
+
+GroupA.11 = setDT(GroupA.11)
+group_times(GroupA.11, datetime = 'time', threshold = '4 minutes')
+
+GroupA.12 = setDT(GroupA.12)
+group_times(GroupA.12, datetime = 'time', threshold = '4 minutes')
+
+
+# Group B
+
+GroupB.24 = setDT(GroupB.24)
+group_times(GroupB.24, datetime = 'Time', threshold = '4 minutes')
+
+GroupB.25 = setDT(GroupB.25)
+group_times(GroupB.25, datetime = 'Time', threshold = '4 minutes')
+
+GroupB.26 = setDT(GroupB.26)
+group_times(GroupB.26, datetime = 'Time', threshold = '4 minutes')
+
+GroupB.27 = setDT(GroupB.27)
+group_times(GroupB.27, datetime = 'Time', threshold = '4 minutes')
+```
+
+Edges:
+```{r}
+# Group A
+edgesA.02 <- edge_dist(GroupA.02, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesA.03 <- edge_dist(GroupA.03, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesA.04 <- edge_dist(GroupA.04, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesA.05 <- edge_dist(GroupA.05, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesA.06 <- edge_dist(GroupA.06, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesA.07 <- edge_dist(GroupA.07, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesA.08 <- edge_dist(GroupA.08, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesA.09 <- edge_dist(GroupA.09, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesA.10 <- edge_dist(GroupA.10, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesA.11 <- edge_dist(GroupA.11, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesA.12 <- edge_dist(GroupA.12, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+
+# Group B
+edgesB.24 <- edge_dist(GroupB.24, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesB.25 <- edge_dist(GroupB.25, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesB.26 <- edge_dist(GroupB.26, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+edgesB.27 <- edge_dist(GroupB.27, threshold = 4, id = 'idnum', coords = c('X', 'Y'), timegroup = 'timegroup')
+```
+
+Dyads:
+```{r}
+library(combinat)
+
+GroupA.pairs = combn(groupA.ids, 2)
+GroupB.pairs = combn(groupB.ids, 2)
+```
+
+## Group A
+
+
+Group A: 2011-06-02
+```{r}
+timegroupsA.02 = unique(GroupA.02$timegroup)
+
+#matrices
+countA.02 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+freqA.02 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+obsA.02 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  for(j in 1:length(timegroupsA.02)){
+    sub1 = edgesA.02[which(edgesA.02$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){
+      countA.02[pair.id1, pair.id2] = countA.02[pair.id1, pair.id2] + 1
+      countA.02[pair.id2, pair.id1] = countA.02[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsA.02[pair.id1, pair.id2] = obsA.02[pair.id1, pair.id2] + 1
+      obsA.02[pair.id2, pair.id1] = obsA.02[pair.id2, pair.id1] + 1
+    }
+  }
+  freqA.02[pair.id1, pair.id2] = countA.02[pair.id1, pair.id2]/obsA.02[pair.id1, pair.id2]
+  freqA.02[pair.id2, pair.id1] = countA.02[pair.id2, pair.id1]/obsA.02[pair.id2, pair.id1]
+}
+```
+
+Group A: 2011-06-03
+```{r}
+timegroupsA.03 = unique(GroupA.03$timegroup)
+
+#matrices
+countA.03 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+freqA.03 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+obsA.03 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  for(j in 1:length(timegroupsA.03)){
+    sub1 = edgesA.03[which(edgesA.03$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){
+      countA.03[pair.id1, pair.id2] = countA.03[pair.id1, pair.id2] + 1
+      countA.03[pair.id2, pair.id1] = countA.03[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsA.03[pair.id1, pair.id2] = obsA.03[pair.id1, pair.id2] + 1
+      obsA.03[pair.id2, pair.id1] = obsA.03[pair.id2, pair.id1] + 1
+    }
+  }
+  freqA.03[pair.id1, pair.id2] = countA.03[pair.id1, pair.id2]/obsA.03[pair.id1, pair.id2]
+  freqA.03[pair.id2, pair.id1] = countA.03[pair.id2, pair.id1]/obsA.03[pair.id2, pair.id1]
+}
+```
+
+Group A: 2011-06-04
+```{r}
+timegroupsA.04 = unique(GroupA.04$timegroup)
+
+#matrices
+countA.04 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+freqA.04 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+obsA.04 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  for(j in 1:length(timegroupsA.04)){
+    sub1 = edgesA.04[which(edgesA.04$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){
+      countA.04[pair.id1, pair.id2] = countA.04[pair.id1, pair.id2] + 1
+      countA.04[pair.id2, pair.id1] = countA.04[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsA.04[pair.id1, pair.id2] = obsA.04[pair.id1, pair.id2] + 1
+      obsA.04[pair.id2, pair.id1] = obsA.04[pair.id2, pair.id1] + 1
+    }
+  }
+  freqA.04[pair.id1, pair.id2] = countA.04[pair.id1, pair.id2]/obsA.04[pair.id1, pair.id2]
+  freqA.04[pair.id2, pair.id1] = countA.04[pair.id2, pair.id1]/obsA.04[pair.id2, pair.id1]
+}
+```
+
+Group A: 2011-06-05
+```{r}
+timegroupsA.05 = unique(GroupA.05$timegroup)
+
+#matrices
+countA.05 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+freqA.05 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+obsA.05 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  for(j in 1:length(timegroupsA.05)){
+    sub1 = edgesA.05[which(edgesA.05$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){
+      countA.05[pair.id1, pair.id2] = countA.05[pair.id1, pair.id2] + 1
+      countA.05[pair.id2, pair.id1] = countA.05[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsA.05[pair.id1, pair.id2] = obsA.05[pair.id1, pair.id2] + 1
+      obsA.05[pair.id2, pair.id1] = obsA.05[pair.id2, pair.id1] + 1
+    }
+  }
+  freqA.05[pair.id1, pair.id2] = countA.05[pair.id1, pair.id2]/obsA.05[pair.id1, pair.id2]
+  freqA.05[pair.id2, pair.id1] = countA.05[pair.id2, pair.id1]/obsA.05[pair.id2, pair.id1]
+}
+```
+
+Group A: 2011-06-06
+```{r}
+timegroupsA.06 = unique(GroupA.06$timegroup)
+
+#matrices
+countA.06 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+freqA.06 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+obsA.06 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  for(j in 1:length(timegroupsA.06)){
+    sub1 = edgesA.06[which(edgesA.06$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){
+      countA.06[pair.id1, pair.id2] = countA.06[pair.id1, pair.id2] + 1
+      countA.06[pair.id2, pair.id1] = countA.06[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsA.06[pair.id1, pair.id2] = obsA.06[pair.id1, pair.id2] + 1
+      obsA.06[pair.id2, pair.id1] = obsA.06[pair.id2, pair.id1] + 1
+    }
+  }
+  freqA.06[pair.id1, pair.id2] = countA.06[pair.id1, pair.id2]/obsA.06[pair.id1, pair.id2]
+  freqA.06[pair.id2, pair.id1] = countA.06[pair.id2, pair.id1]/obsA.06[pair.id2, pair.id1]
+}
+```
+
+Group A: 2011-06-07
+```{r}
+timegroupsA.07 = unique(GroupA.07$timegroup)
+
+#matrices
+countA.07 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+freqA.07 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+obsA.07 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  for(j in 1:length(timegroupsA.07)){
+    sub1 = edgesA.07[which(edgesA.07$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){
+      countA.07[pair.id1, pair.id2] = countA.07[pair.id1, pair.id2] + 1
+      countA.07[pair.id2, pair.id1] = countA.07[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsA.07[pair.id1, pair.id2] = obsA.07[pair.id1, pair.id2] + 1
+      obsA.07[pair.id2, pair.id1] = obsA.07[pair.id2, pair.id1] + 1
+    }
+  }
+  freqA.07[pair.id1, pair.id2] = countA.07[pair.id1, pair.id2]/obsA.07[pair.id1, pair.id2]
+  freqA.07[pair.id2, pair.id1] = countA.07[pair.id2, pair.id1]/obsA.07[pair.id2, pair.id1]
+}
+```
+
+Group A: 2011-06-08
+```{r}
+timegroupsA.08 = unique(GroupA.08$timegroup)
+
+#matrices
+countA.08 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+freqA.08 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+obsA.08 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  for(j in 1:length(timegroupsA.08)){
+    sub1 = edgesA.08[which(edgesA.08$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){
+      countA.08[pair.id1, pair.id2] = countA.08[pair.id1, pair.id2] + 1
+      countA.08[pair.id2, pair.id1] = countA.08[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsA.08[pair.id1, pair.id2] = obsA.08[pair.id1, pair.id2] + 1
+      obsA.08[pair.id2, pair.id1] = obsA.08[pair.id2, pair.id1] + 1
+    }
+  }
+  freqA.08[pair.id1, pair.id2] = countA.08[pair.id1, pair.id2]/obsA.08[pair.id1, pair.id2]
+  freqA.08[pair.id2, pair.id1] = countA.08[pair.id2, pair.id1]/obsA.08[pair.id2, pair.id1]
+}
+```
+
+Group A: 2011-06-09
+```{r}
+timegroupsA.09 = unique(GroupA.09$timegroup)
+
+#matrices
+countA.09 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+freqA.09 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+obsA.09 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  for(j in 1:length(timegroupsA.09)){
+    sub1 = edgesA.09[which(edgesA.09$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){
+      countA.09[pair.id1, pair.id2] = countA.09[pair.id1, pair.id2] + 1
+      countA.09[pair.id2, pair.id1] = countA.09[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsA.09[pair.id1, pair.id2] = obsA.09[pair.id1, pair.id2] + 1
+      obsA.09[pair.id2, pair.id1] = obsA.09[pair.id2, pair.id1] + 1
+    }
+  }
+  freqA.09[pair.id1, pair.id2] = countA.09[pair.id1, pair.id2]/obsA.09[pair.id1, pair.id2]
+  freqA.09[pair.id2, pair.id1] = countA.09[pair.id2, pair.id1]/obsA.09[pair.id2, pair.id1]
+}
+```
+
+Group A: 2011-06-10
+```{r}
+timegroupsA.10 = unique(GroupA.10$timegroup)
+
+#matrices
+countA.10 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+freqA.10 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+obsA.10 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  for(j in 1:length(timegroupsA.10)){
+    sub1 = edgesA.10[which(edgesA.10$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){
+      countA.10[pair.id1, pair.id2] = countA.10[pair.id1, pair.id2] + 1
+      countA.10[pair.id2, pair.id1] = countA.10[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsA.10[pair.id1, pair.id2] = obsA.10[pair.id1, pair.id2] + 1
+      obsA.10[pair.id2, pair.id1] = obsA.10[pair.id2, pair.id1] + 1
+    }
+  }
+  freqA.10[pair.id1, pair.id2] = countA.10[pair.id1, pair.id2]/obsA.10[pair.id1, pair.id2]
+  freqA.10[pair.id2, pair.id1] = countA.10[pair.id2, pair.id1]/obsA.10[pair.id2, pair.id1]
+}
+```
+
+Group A: 2011-06-11
+```{r}
+timegroupsA.11 = unique(GroupA.11$timegroup)
+
+#matrices
+countA.11 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+freqA.11 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+obsA.11 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  for(j in 1:length(timegroupsA.11)){
+    sub1 = edgesA.11[which(edgesA.11$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){
+      countA.11[pair.id1, pair.id2] = countA.11[pair.id1, pair.id2] + 1
+      countA.11[pair.id2, pair.id1] = countA.11[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsA.11[pair.id1, pair.id2] = obsA.11[pair.id1, pair.id2] + 1
+      obsA.11[pair.id2, pair.id1] = obsA.11[pair.id2, pair.id1] + 1
+    }
+  }
+  freqA.11[pair.id1, pair.id2] = countA.11[pair.id1, pair.id2]/obsA.11[pair.id1, pair.id2]
+  freqA.11[pair.id2, pair.id1] = countA.11[pair.id2, pair.id1]/obsA.11[pair.id2, pair.id1]
+}
+```
+
+Group A: 2011-06-12
+```{r}
+timegroupsA.12 = unique(GroupA.12$timegroup)
+
+#matrices
+countA.12 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+freqA.12 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+obsA.12 <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  for(j in 1:length(timegroupsA.12)){
+    sub1 = edgesA.12[which(edgesA.12$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){
+      countA.12[pair.id1, pair.id2] = countA.12[pair.id1, pair.id2] + 1
+      countA.12[pair.id2, pair.id1] = countA.12[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsA.12[pair.id1, pair.id2] = obsA.12[pair.id1, pair.id2] + 1
+      obsA.12[pair.id2, pair.id1] = obsA.12[pair.id2, pair.id1] + 1
+    }
+  }
+  freqA.12[pair.id1, pair.id2] = countA.12[pair.id1, pair.id2]/obsA.12[pair.id1, pair.id2]
+  freqA.12[pair.id2, pair.id1] = countA.12[pair.id2, pair.id1]/obsA.12[pair.id2, pair.id1]
+}
+```
+
+Heatmaps:
+```{r}
+library(pheatmap)
+
+#fix scale
+breaklist = seq(0, 0.3, by = 0.015)
+
+pheatmap(freqA.02, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklist,  cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of Interactions - Group A (2011-06-02)')
+
+pheatmap(freqA.03, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklist, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of Interactions - Group A (2011-06-03)')
+
+pheatmap(freqA.04, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklist, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of Interactions - Group A (2011-06-04)')
+
+pheatmap(freqA.05, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklist, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of Interactions - Group A (2011-06-05)')
+
+pheatmap(freqA.06, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklist, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of Interactions - Group A (2011-06-06)')
+
+pheatmap(freqA.07, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklist, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of Interactions - Group A (2011-06-07)')
+
+pheatmap(freqA.08, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklist, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of Interactions - Group A (2011-06-08)')
+
+pheatmap(freqA.09, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklist, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of Interactions - Group A (2011-06-09)')
+
+pheatmap(freqA.10, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklist, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of Interactions - Group A (2011-06-10)')
+
+pheatmap(freqA.11, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklist, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of Interactions - Group A (2011-06-11)')
+
+pheatmap(freqA.12, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklist, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of Interactions - Group A (2011-06-12)')
+```
+
+## Group B
+
+
+Group B: 2011-10-24
+```{r}
+timegroupsB.24 = unique(GroupB.24$timegroup)
+
+#matrices
+countB.24 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+freqB.24 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+obsB.24 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+for(i in 1:28){
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  
+  for(j in 1:length(timegroupsB.24)){
+    sub1 = edgesB.24[which(edgesB.24$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){ #i.e. if there is an edge between the pair at the timepoint in the edge list
+      countB.24[pair.id1, pair.id2] = countB.24[pair.id1, pair.id2] + 1
+      countB.24[pair.id2, pair.id1] = countB.24[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsB.24[pair.id1, pair.id2] = obsB.24[pair.id1, pair.id2] + 1
+      obsB.24[pair.id2, pair.id1] = obsB.24[pair.id2, pair.id1] + 1
+    }
+  }
+  freqB.24[pair.id1, pair.id2] = countB.24[pair.id1, pair.id2]/obsB.24[pair.id1, pair.id2]
+  freqB.24[pair.id2, pair.id1] = countB.24[pair.id2, pair.id1]/obsB.24[pair.id2, pair.id1]
+}
+```
+
+Group B: 2011-10-25
+```{r}
+timegroupsB.25 = unique(GroupB.25$timegroup)
+
+#matrices
+countB.25 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+freqB.25 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+obsB.25 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+for(i in 1:28){
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  
+  for(j in 1:length(timegroupsB.25)){
+    sub1 = edgesB.25[which(edgesB.25$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){ #i.e. if there is an edge between the pair at the timepoint in the edge list
+      countB.25[pair.id1, pair.id2] = countB.25[pair.id1, pair.id2] + 1
+      countB.25[pair.id2, pair.id1] = countB.25[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsB.25[pair.id1, pair.id2] = obsB.25[pair.id1, pair.id2] + 1
+      obsB.25[pair.id2, pair.id1] = obsB.25[pair.id2, pair.id1] + 1
+    }
+  }
+  freqB.25[pair.id1, pair.id2] = countB.25[pair.id1, pair.id2]/obsB.25[pair.id1, pair.id2]
+  freqB.25[pair.id2, pair.id1] = countB.25[pair.id2, pair.id1]/obsB.25[pair.id2, pair.id1]
+}
+```
+
+Group B: 2011-10-26
+```{r}
+timegroupsB.26 = unique(GroupB.26$timegroup)
+
+#matrices
+countB.26 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+freqB.26 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+obsB.26 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+for(i in 1:28){
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  
+  for(j in 1:length(timegroupsB.26)){
+    sub1 = edgesB.26[which(edgesB.26$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){ #i.e. if there is an edge between the pair at the timepoint in the edge list
+      countB.26[pair.id1, pair.id2] = countB.26[pair.id1, pair.id2] + 1
+      countB.26[pair.id2, pair.id1] = countB.26[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsB.26[pair.id1, pair.id2] = obsB.26[pair.id1, pair.id2] + 1
+      obsB.26[pair.id2, pair.id1] = obsB.26[pair.id2, pair.id1] + 1
+    }
+  }
+  freqB.26[pair.id1, pair.id2] = countB.26[pair.id1, pair.id2]/obsB.26[pair.id1, pair.id2]
+  freqB.26[pair.id2, pair.id1] = countB.26[pair.id2, pair.id1]/obsB.26[pair.id2, pair.id1]
+}
+```
+
+Group B: 2011-10-27
+```{r}
+timegroupsB.27 = unique(GroupB.27$timegroup)
+
+#matrices
+countB.27 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+freqB.27 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+obsB.27 <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+for(i in 1:28){
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  
+  for(j in 1:length(timegroupsB.27)){
+    sub1 = edgesB.27[which(edgesB.27$timegroup == j), ]
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ]
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ]
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ]
+    if(nrow(sub3 != 0)){ #i.e. if there is an edge between the pair at the timepoint in the edge list
+      countB.27[pair.id1, pair.id2] = countB.27[pair.id1, pair.id2] + 1
+      countB.27[pair.id2, pair.id1] = countB.27[pair.id2, pair.id1] + 1
+    }
+    if(nrow(sub2) != 0 & nrow(sub4) != 0){ #i.e. if there is data for both cows at this timepoint
+      obsB.27[pair.id1, pair.id2] = obsB.27[pair.id1, pair.id2] + 1
+      obsB.27[pair.id2, pair.id1] = obsB.27[pair.id2, pair.id1] + 1
+    }
+  }
+  freqB.27[pair.id1, pair.id2] = countB.27[pair.id1, pair.id2]/obsB.27[pair.id1, pair.id2]
+  freqB.27[pair.id2, pair.id1] = countB.27[pair.id2, pair.id1]/obsB.27[pair.id2, pair.id1]
+}
+```
+
+Heatmaps:
+```{r}
+breaklistB = seq(0, 0.23, by = 0.0115)
+
+pheatmap(freqB.24, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklistB, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 33, cellheight = 33, treeheight_row = 0, main = 'Frequency of Interactions - Group B (2011-10-24)')
+
+pheatmap(freqB.25, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklistB, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 33, cellheight = 33, treeheight_row = 0, main = 'Frequency of Interactions - Group B (2011-10-25)')
+
+pheatmap(freqB.26, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklistB, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 33, cellheight = 33, treeheight_row = 0, main = 'Frequency of Interactions - Group B (2011-10-26)')
+
+pheatmap(freqB.27, color = colorRampPalette(c('white','yellow', 'red', 'black'))(20), breaks = breaklistB, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 33, cellheight = 33, treeheight_row = 0, main = 'Frequency of Interactions - Group B (2011-10-27)')
+```
+
+
+## Networks
+
+```{r}
+library(igraph)
+c_scale <- colorRamp(c('grey','black','cyan','blue'))
+
+#Group A
+coordsA <- layout.fruchterman.reingold(GroupA.graph)
+
+GroupA.graph02 <- graph.adjacency(freqA.02, mode="undirected", weighted=TRUE)
+E(GroupA.graph02)$color = apply(c_scale(E(GroupA.graph02)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupA.graph02)$weight <- (E(GroupA.graph02)$weight/0.1)*5
+plot(GroupA.graph02, edge.width = E(GroupA.graph02)$weight, edge.col = E(GroupA.graph02)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-02')
+
+freqA.03[is.nan(freqA.03)] <- 0
+GroupA.graph03 <- graph.adjacency(freqA.03, mode="undirected", weighted=TRUE)
+E(GroupA.graph03)$color = apply(c_scale(E(GroupA.graph03)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+#E(GroupA.graph)$weight <- (E(GroupA.graph)$weight/0.1)*5
+plot(GroupA.graph03, edge.width = E(GroupA.graph03)$weight, edge.col = E(GroupA.graph03)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-03')
+
+freqA.04[is.nan(freqA.04)] <- 0
+GroupA.graph04 <- graph.adjacency(freqA.04, mode="undirected", weighted=TRUE)
+E(GroupA.graph04)$color = apply(c_scale(E(GroupA.graph04)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+#E(GroupA.graph)$weight <- (E(GroupA.graph)$weight/0.1)*5
+plot(GroupA.graph04, edge.width = E(GroupA.graph04)$weight, edge.col = E(GroupA.graph04)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-04')
+
+freqA.05[is.nan(freqA.05)] <- 0
+GroupA.graph05 <- graph.adjacency(freqA.05, mode="undirected", weighted=TRUE)
+E(GroupA.graph05)$color = apply(c_scale(E(GroupA.graph05)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+#E(GroupA.graph)$weight <- (E(GroupA.graph)$weight/0.1)*5
+plot(GroupA.graph05, edge.width = E(GroupA.graph05)$weight, edge.col = E(GroupA.graph05)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-05')
+
+freqA.06[is.nan(freqA.06)] <- 0
+GroupA.graph06 <- graph.adjacency(freqA.06, mode="undirected", weighted=TRUE)
+E(GroupA.graph06)$color = apply(c_scale(E(GroupA.graph06)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+#E(GroupA.graph)$weight <- (E(GroupA.graph)$weight/0.1)*5
+plot(GroupA.graph06, edge.width = E(GroupA.graph06)$weight, edge.col = E(GroupA.graph06)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-06')
+
+freqA.07[is.nan(freqA.07)] <- 0
+GroupA.graph07 <- graph.adjacency(freqA.07, mode="undirected", weighted=TRUE)
+E(GroupA.graph07)$color = apply(c_scale(E(GroupA.graph07)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+#E(GroupA.graph)$weight <- (E(GroupA.graph)$weight/0.1)*5
+plot(GroupA.graph07, edge.width = E(GroupA.graph07)$weight, edge.col = E(GroupA.graph07)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-07')
+
+freqA.08[is.nan(freqA.08)] <- 0
+GroupA.graph08 <- graph.adjacency(freqA.08, mode="undirected", weighted=TRUE)
+E(GroupA.graph08)$color = apply(c_scale(E(GroupA.graph08)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+#E(GroupA.graph)$weight <- (E(GroupA.graph)$weight/0.1)*5
+plot(GroupA.graph08, edge.width = E(GroupA.graph08)$weight, edge.col = E(GroupA.graph08)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-08')
+
+freqA.09[is.nan(freqA.09)] <- 0
+GroupA.graph09 <- graph.adjacency(freqA.09, mode="undirected", weighted=TRUE)
+E(GroupA.graph09)$color = apply(c_scale(E(GroupA.graph09)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+#E(GroupA.graph)$weight <- (E(GroupA.graph)$weight/0.1)*5
+plot(GroupA.graph09, edge.width = E(GroupA.graph09)$weight, edge.col = E(GroupA.graph08)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-09')
+
+freqA.10[is.nan(freqA.10)] <- 0
+GroupA.graph10 <- graph.adjacency(freqA.10, mode="undirected", weighted=TRUE)
+E(GroupA.graph10)$color = apply(c_scale(E(GroupA.graph10)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+#E(GroupA.graph)$weight <- (E(GroupA.graph)$weight/0.1)*5
+plot(GroupA.graph10, edge.width = E(GroupA.graph10)$weight, edge.col = E(GroupA.graph10)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-10')
+
+freqA.11[is.nan(freqA.11)] <- 0
+GroupA.graph11 <- graph.adjacency(freqA.11, mode="undirected", weighted=TRUE)
+E(GroupA.graph11)$color = apply(c_scale(E(GroupA.graph11)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+#E(GroupA.graph)$weight <- (E(GroupA.graph)$weight/0.1)*5
+plot(GroupA.graph11, edge.width = E(GroupA.graph11)$weight, edge.col = E(GroupA.graph11)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-11')
+
+freqA.12[is.nan(freqA.12)] <- 0
+GroupA.graph12 <- graph.adjacency(freqA.12, mode="undirected", weighted=TRUE)
+E(GroupA.graph12)$color = apply(c_scale(E(GroupA.graph12)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+#E(GroupA.graph)$weight <- (E(GroupA.graph)$weight/0.1)*5
+plot(GroupA.graph12, edge.width = E(GroupA.graph12)$weight, edge.col = E(GroupA.graph12)$color, layout=coordsA, main = 'Network of Interaction Frequency - Group A 2011-06-12')
+```
+
+```{r}
+# Group B
+coordsB <- layout.fruchterman.reingold(GroupB.graph)
+
+GroupB.graph24 <- graph.adjacency(freqB.24, mode="undirected", weighted=TRUE)
+E(GroupB.graph24)$color = apply(c_scale(E(GroupB.graph24)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupB.graph24)$weight <- (E(GroupB.graph24)$weight/0.1)*10
+plot(GroupB.graph24, edge.width = E(GroupB.graph24)$weight, edge.col = E(GroupB.graph24)$color, layout=coordsB, main = 'Group B 2011-10-24')
+
+GroupB.graph25 <- graph.adjacency(freqB.25, mode="undirected", weighted=TRUE)
+E(GroupB.graph25)$color = apply(c_scale(E(GroupB.graph25)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupB.graph25)$weight <- (E(GroupB.graph25)$weight/0.1)*10
+plot(GroupB.graph25, edge.width = E(GroupB.graph25)$weight, edge.col = E(GroupB.graph25)$color, layout=coordsB, main = 'Group B 2011-10-25')
+
+GroupB.graph26 <- graph.adjacency(freqB.26, mode="undirected", weighted=TRUE)
+E(GroupB.graph26)$color = apply(c_scale(E(GroupB.graph26)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupB.graph26)$weight <- (E(GroupB.graph26)$weight/0.1)*10
+plot(GroupB.graph26, edge.width = E(GroupB.graph26)$weight, edge.col = E(GroupB.graph26)$color, layout=coordsB, main = 'Group B 2011-10-26')
+
+GroupB.graph27 <- graph.adjacency(freqB.27, mode="undirected", weighted=TRUE)
+E(GroupB.graph27)$color = apply(c_scale(E(GroupB.graph27)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+E(GroupB.graph27)$weight <- (E(GroupB.graph27)$weight/0.1)*10
+plot(GroupB.graph27, edge.width = E(GroupB.graph27)$weight, edge.col = E(GroupB.graph27)$color, layout=coordsB, main = 'Group B 2011-10-27')
+```
+
+

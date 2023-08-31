@@ -1,0 +1,286 @@
+---
+title: "12 minute interaction definition"
+output: html_notebook
+---
+
+Want to define an interaction as 2 animals being within the 4 meter threshold of
+each other for 3 consecutive time-groups. 
+
+## Overall (Daytime Only)
+
+```{r}
+head(GroupB.day.dt)
+head(GroupA.day.dt)
+```
+
+```{r}
+head(edgesB)
+head(edgesA)
+```
+
+# Group B
+
+GroupB.pairs
+timegroupsB
+
+
+```{r}
+# matrix to store count of 'interactions' for each pair
+countB12.mat <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+# matrix to store frequency of 'interactions' for each pair
+freqB12.mat <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+#matrix to store number of timepoints at which there is gps data recorded for both cows in each pair
+obsB12.mat <- matrix(0, ncol = 8, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+for(i in 1:28){ #for each pair of animals
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  t = 1
+  
+  while(t <= length(timegroupsB)){
+    sub1 = edgesB[which(edgesB$timegroup == t), ] #all edges at timegroup t
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ] #above where first id is id1
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ] #above where second id is id2
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ] #sub1 where first id is id2
+    
+    if(nrow(sub3) != 0){ #if there is an edge between the pair
+      t = t+1 #go to next timegroup
+      sub5 = edgesB[which(edgesB$timegroup == t), ]
+      sub6 = sub5[which(sub5$ID1 == pair.id1), ]
+      sub7 = sub6[which(sub6$ID2 == pair.id2), ]
+      sub8 = sub5[which(sub5$ID1 == pair.id2), ]
+      obsB12.mat[pair.id1, pair.id2] = obsB12.mat[pair.id1, pair.id2] + 1 #if there an edge,
+      obsB12.mat[pair.id2, pair.id1] = obsB12.mat[pair.id2, pair.id1] + 1 #there's obs for both
+      
+      if(nrow(sub7) != 0 & t <= length(timegroupsB)){ #if there is still an edge between the pair
+        t = t+1 #go to next timegroup
+        sub9 = edgesB[which(edgesB$timegroup == t), ]
+        sub10 = sub9[which(sub9$ID1 == pair.id1), ]
+        sub11 = sub10[which(sub10$ID2 == pair.id2), ]
+        sub12 = sub9[which(sub9$ID1 == pair.id2), ]
+        obsB12.mat[pair.id1, pair.id2] = obsB12.mat[pair.id1, pair.id2] + 1 #if there an edge,
+        obsB12.mat[pair.id2, pair.id1] = obsB12.mat[pair.id2, pair.id1] + 1 #there's obs for both
+        
+        if(nrow(sub11) & t <= length(timegroupsB)){ # there is a third edge
+          countB12.mat[pair.id1, pair.id2] = countB12.mat[pair.id1, pair.id2] + 1 #add 1 to the count
+          countB12.mat[pair.id2, pair.id1] = countB12.mat[pair.id2, pair.id1] + 1 #add 1 to the count
+          obsB12.mat[pair.id1, pair.id2] = obsB12.mat[pair.id1, pair.id2] + 1 #if there an edge,
+          obsB12.mat[pair.id2, pair.id1] = obsB12.mat[pair.id2, pair.id1] + 1 #there's obs for both
+          t = t+1 #restart while loop at next timegroup
+        }
+        else{ #if there is no third edge
+          if(nrow(sub10) != 0 & nrow(sub12) != 0){ #observations for both animals
+            obsB12.mat[pair.id1, pair.id2] = obsB12.mat[pair.id1, pair.id2] + 1
+            obsB12.mat[pair.id2, pair.id1] = obsB12.mat[pair.id2, pair.id1] + 1
+          }
+          t = t+1 #restart while loop at next timegroup
+        }
+      }
+      else{ # if no second edge
+        if(nrow(sub6) != 0 & nrow(sub8) != 0){ #observations for both animals
+            obsB12.mat[pair.id1, pair.id2] = obsB12.mat[pair.id1, pair.id2] + 1
+            obsB12.mat[pair.id2, pair.id1] = obsB12.mat[pair.id2, pair.id1] + 1
+        }
+        t = t+1 #restart while loop at next timegroup
+      }
+    }
+    else{ # if no first edge
+      if(nrow(sub2) != 0 & nrow(sub4) != 0){ #observations for both animals
+      obsB12.mat[pair.id1, pair.id2] = obsB12.mat[pair.id1, pair.id2] + 1
+      obsB12.mat[pair.id2, pair.id1] = obsB12.mat[pair.id2, pair.id1] + 1
+      }
+      t = t+1 #restart while loop at next timegroup
+    }
+  }
+  obsB12.mat <- obsB12.mat%/%3
+  freqB12.mat[pair.id1, pair.id2] = countB12.mat[pair.id1, pair.id2]/obsB12.mat[pair.id1, pair.id2]
+  freqB12.mat[pair.id2, pair.id1] = countB12.mat[pair.id2, pair.id1]/obsB12.mat[pair.id2, pair.id1]
+}
+```
+
+```{r}
+freqB12.mat
+```
+
+```{r}
+library(pheatmap)
+
+breaklistB12 = seq(0, 0.07, by = 0.00175)
+
+pheatmap(freqB12.mat, color = colorRampPalette(c('white','yellow','orange', 'red', 'black'))(40), breaks = breaklistB12, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 33, cellheight = 33, treeheight_row = 0, main = 'Frequency of 12 Minute Interactions - Group B All Days')
+```
+
+# Group A
+
+```{r}
+# matrix to store count of 'interactions' for each pair
+countA12.mat <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+# matrix to store frequency of 'interactions' for each pair
+freqA12.mat <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+#matrix to store number of timepoints at which there is gps data recorded for both cows in each pair
+obsA12.mat <- matrix(0, ncol = 24, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+for(i in 1:276){ #for each pair of animals
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  t = 1
+  
+  while(t <= length(timegroupsA)){
+    sub1 = edgesA[which(edgesA$timegroup == t), ] #all edges at timegroup t
+    sub2 = sub1[which(sub1$ID1 == pair.id1), ] #above where first id is id1
+    sub3 = sub2[which(sub2$ID2 == pair.id2), ] #above where second id is id2
+    sub4 = sub1[which(sub1$ID1 == pair.id2), ] #sub1 where first id is id2
+    
+    if(nrow(sub3) != 0){ #if there is an edge between the pair
+      t = t+1 #go to next timegroup
+      sub5 = edgesA[which(edgesA$timegroup == t), ]
+      sub6 = sub5[which(sub5$ID1 == pair.id1), ]
+      sub7 = sub6[which(sub6$ID2 == pair.id2), ]
+      sub8 = sub5[which(sub5$ID1 == pair.id2), ]
+      obsA12.mat[pair.id1, pair.id2] = obsA12.mat[pair.id1, pair.id2] + 1 #if there an edge,
+      obsA12.mat[pair.id2, pair.id1] = obsA12.mat[pair.id2, pair.id1] + 1 #there's obs for both
+      
+      if(nrow(sub7) != 0 & t <= length(timegroupsA)){ #if there is still an edge between the pair
+        t = t+1 #go to next timegroup
+        sub9 = edgesA[which(edgesA$timegroup == t), ]
+        sub10 = sub9[which(sub9$ID1 == pair.id1), ]
+        sub11 = sub10[which(sub10$ID2 == pair.id2), ]
+        sub12 = sub9[which(sub9$ID1 == pair.id2), ]
+        obsA12.mat[pair.id1, pair.id2] = obsA12.mat[pair.id1, pair.id2] + 1 #if there an edge,
+        obsA12.mat[pair.id2, pair.id1] = obsA12.mat[pair.id2, pair.id1] + 1 #there's obs for both
+        
+        if(nrow(sub11) & t <= length(timegroupsA)){ # there is a third edge
+          countA12.mat[pair.id1, pair.id2] = countA12.mat[pair.id1, pair.id2] + 1 #add 1 to the count
+          countA12.mat[pair.id2, pair.id1] = countA12.mat[pair.id2, pair.id1] + 1 #add 1 to the count
+          obsA12.mat[pair.id1, pair.id2] = obsA12.mat[pair.id1, pair.id2] + 1 #if there an edge,
+          obsA12.mat[pair.id2, pair.id1] = obsA12.mat[pair.id2, pair.id1] + 1 #there's obs for both
+          t = t+1 #restart while loop at next timegroup
+        }
+        else{ #if there is no third edge
+          if(nrow(sub10) != 0 & nrow(sub12) != 0){ #observations for both animals
+            obsA12.mat[pair.id1, pair.id2] = obsA12.mat[pair.id1, pair.id2] + 1
+            obsA12.mat[pair.id2, pair.id1] = obsA12.mat[pair.id2, pair.id1] + 1
+          }
+          t = t+1 #restart while loop at next timegroup
+        }
+      }
+      else{ # if no second edge
+        if(nrow(sub6) != 0 & nrow(sub8) != 0){ #observations for both animals
+            obsA12.mat[pair.id1, pair.id2] = obsA12.mat[pair.id1, pair.id2] + 1
+            obsA12.mat[pair.id2, pair.id1] = obsA12.mat[pair.id2, pair.id1] + 1
+        }
+        t = t+1 #restart while loop at next timegroup
+      }
+    }
+    else{ # if no first edge
+      if(nrow(sub2) != 0 & nrow(sub4) != 0){ #observations for both animals
+      obsA12.mat[pair.id1, pair.id2] = obsA12.mat[pair.id1, pair.id2] + 1
+      obsA12.mat[pair.id2, pair.id1] = obsA12.mat[pair.id2, pair.id1] + 1
+      }
+      t = t+1 #restart while loop at next timegroup
+    }
+  }
+  obsA12.mat <- obsA12.mat%/%3
+  freqA12.mat[pair.id1, pair.id2] = countA12.mat[pair.id1, pair.id2]/obsA12.mat[pair.id1, pair.id2]
+  freqA12.mat[pair.id2, pair.id1] = countA12.mat[pair.id2, pair.id1]/obsA12.mat[pair.id2, pair.id1]
+}
+```
+*took 11 minutes*
+
+```{r}
+freqA12.mat
+```
+
+```{r}
+breaklistA12 = seq(0, 0.1, by = 0.0025)
+
+pheatmap(freqA12.mat, color = colorRampPalette(c('white','yellow', 'orange', 'red', 'black'))(40), breaks = breaklistA12, cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Frequency of 12 Minute Interactions - Group A All Days')
+```
+
+## Node Strength
+
+```{r}
+#Group B (all days)
+n = 8
+groupB12.strength = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupB.ids)){
+  soc = sum(freqB12.mat[groupB.ids[i], ])
+  groupB12.strength[i] = soc
+}
+
+nodestrnB12 <- data.frame(groupB.ids, groupB12.strength)
+```
+
+```{r}
+#Group A (all days)
+n = 24
+groupA12.strength = vector(mode = 'numeric', length = n)
+
+for(i in 1:length(groupA.ids)){
+  soc = sum(freqA12.mat[groupA.ids[i], ])
+  groupA12.strength[i] = soc
+}
+
+nodestrnA12 <- data.frame(groupA.ids, groupA12.strength)
+```
+
+## Network Graphs
+
+```{r}
+library(igraph)
+
+GroupB12.graph <- graph.adjacency(freqB12.mat, mode="undirected", weighted=TRUE)
+# E(GroupB.graph)$weight is the count from the original matrix
+
+E(GroupB12.graph)$weight <- (E(GroupB12.graph)$weight - min(freqB12.mat))/(max(freqB12.mat)- min(freqB12.mat))
+
+#Color scaling function
+c_scale <- colorRamp(c('white','black'))
+
+#Applying the color scale to edge weights.
+#rgb method is to convert colors to a character vector.
+E(GroupB12.graph)$color = apply(c_scale(E(GroupB12.graph)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+
+E(GroupB12.graph)$weight <- (E(GroupB12.graph)$weight)*10
+V(GroupB12.graph)$size <- (groupB12.strength/max(groupB12.strength))*35
+
+plot(GroupB12.graph, edge.width = E(GroupB12.graph)$weight, edge.col = E(GroupB12.graph)$color, layout = coordsB, main = 'Network of 12 Minute Interaction Frequency - Group B')
+```
+Replace all values that are less than the mean with 0:
+```{r}
+freqA12.mat2 = freqA12.mat
+for(i in 1:24){
+  for(j in 1:24){
+  if(freqA12.mat[i,j] < mean(freqA12.mat)){
+    freqA12.mat2[i,j] = 0
+  }
+  }
+}
+```
+
+```{r}
+coordsA <- layout.fruchterman.reingold(GroupA.graph2)
+
+GroupA12.graph2 <- graph.adjacency(freqA12.mat2, mode="undirected", weighted=TRUE)
+
+#normalize
+E(GroupA12.graph2)$weight <- (E(GroupA12.graph2)$weight - min(freqA12.mat2))/(max(freqA12.mat2)- min(freqA12.mat2))
+
+#Color scaling function
+c_scale <- colorRamp(c('white','black'))
+
+#Applying the color scale to edge weights.
+#rgb method is to convert colors to a character vector.
+E(GroupA12.graph2)$color = apply(c_scale(E(GroupA12.graph2)$weight), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255) )
+
+E(GroupA12.graph2)$weight <- (E(GroupA12.graph2)$weight)*10
+V(GroupA12.graph2)$size <- (groupA12.strength)*25
+
+plot(GroupA12.graph2, edge.width = E(GroupA12.graph2)$weight, edge.col = E(GroupA12.graph2)$color, layout=coordsA, main = 'Network of 12 Minute Interaction Frequency - Group A')
+```
+

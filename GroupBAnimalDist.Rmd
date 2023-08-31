@@ -1,0 +1,73 @@
+---
+title: "Group B Animal Distribution"
+output: html_notebook
+---
+
+Raster map image:
+```{r}
+GroupB.map2 <- readPNG("C:\\Users\\User\\OneDrive - University College Cork\\Documents\\MSc\\Thesis\\GroupBfarmImage.png")
+```
+
+GroupB.24 = day of 24th, etc
+
+```{r}
+# Set up a plot area with no plot
+plot(317750:318150, 4367500:4367900, type='n', main="Group B Animal Distribution: 2011-10-24", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupB.map2, 
+            xleft=317819, xright=318018, 
+            ybottom=4367516, ytop=4367898)
+#grid()
+
+points(x = GroupB.24$X, y = GroupB.24$Y, pch = 20,
+       col = alpha('black', 0.5))
+```
+
+```{r}
+# Set up a plot area with no plot
+plot(317750:318150, 4367500:4367900, type='n', main="Group B Animal Distribution: 2011-10-25", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupB.map2, 
+            xleft=317819, xright=318018, 
+            ybottom=4367516, ytop=4367898)
+#grid()
+
+points(x = GroupB.25$X, y = GroupB.25$Y, pch = 20,
+       col = alpha('black', 0.5))
+```
+
+```{r}
+# Set up a plot area with no plot
+plot(317750:318150, 4367500:4367900, type='n', main="Group B Animal Distribution: 2011-10-26", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupB.map2, 
+            xleft=317819, xright=318018, 
+            ybottom=4367516, ytop=4367898)
+#grid()
+
+points(x = GroupB.26$X, y = GroupB.26$Y, pch = 20,
+       col = alpha('black', 0.5))
+```
+
+```{r}
+# Set up a plot area with no plot
+plot(317750:318150, 4367500:4367900, type='n', main="Group B Animal Distribution: 2011-10-27", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupB.map2, 
+            xleft=317819, xright=318018, 
+            ybottom=4367516, ytop=4367898)
+#grid()
+
+points(x = GroupB.27$X, y = GroupB.27$Y, pch = 20,
+       col = alpha('black', 0.5))
+```
+
+

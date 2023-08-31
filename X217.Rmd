@@ -1,0 +1,103 @@
+---
+title: "Group A X217"
+output: html_notebook
+---
+
+```{r}
+library(ggplot2)
+
+ggplot(GroupA.night.df, aes(x=X, y=Y, color = idnum)) + geom_point()
+
+X217 = GroupA.night.df[which(GroupA.night.df$idnum == 'X217'), ]
+
+ggplot(X217, aes(x=X, y=Y)) +geom_point()
+
+rest = GroupA.night.df[which(GroupA.night.df$idnum != 'X217'), ]
+
+ggplot(rest, aes(x=X, y=Y)) +geom_point()
+
+plot(rest$X, rest$Y)
+points(X217$X, X217$Y, col = 'red')
+
+
+X217.odd = X217[which(X217$X < 394940), ]
+nrow(X217.odd)
+summary(X217.odd)
+
+rest.days = rest[which(rest$time >= '2011-06-08 20:30:00' & rest$time <= '2011-06-10 20:30:00'), ]
+X217.days = X217[which(X217$time >= '2011-06-08 20:30:00' & X217$time <= '2011-06-10 20:30:00'), ]
+
+plot(rest.days$X, rest.days$Y, xlim = c(394850, 395300))
+points(X217.days$X, X217.days$Y, col = 'red')
+
+plot(X217.odd$X, X217.odd$Y)
+```
+
+Plot path:
+```{r}
+daysA = unique(format(GroupA.day.df$time, format = '%Y-%m-%d'))
+
+X217.day = GroupA.day.df[which(GroupA.day.df$idnum == 'X217'),]
+X217.night = GroupA.night.df[which(GroupA.night.df$idnum == 'X217'),]
+
+#plot day paths
+for(i in 2:length(daysA)){
+  subset = X217.day[which(X217.day$time <= daysA[i] & X217.day$time > daysA[i-1]), ]
+  print(ggplot(subset, aes(x = X, y = Y, colour = time)) + geom_path() + geom_point(alpha = 0.5) + xlim(394850, 395300) + ylim(4437050, 4437280) + ggtitle(daysA[i-1]))
+}
+
+#plot night paths
+for(i in 2:length(daysA)){
+  subset = X217.night[which(X217.night$time <= daysA[i] & X217.night$time > daysA[i-1]), ]
+  print(ggplot(subset, aes(x = X, y = Y, colour = time)) + geom_path() + geom_point(alpha = 0.5) + xlim(394850, 395300) + ylim(4437050, 4437280) + ggtitle(daysA[i-1]))
+}
+```
+
+```{r}
+X217.all = GroupA.df[which(GroupA.df$idnum == 'X217'), ]
+
+X217.all.0809 = X217.all[which(X217.all$time > '2011-06-08 00:00' & X217.all$time < '2011-06-09 23:59'), ]
+
+ggplot(X217.all.0809, aes(x = X, y = Y, colour = time)) + geom_path() + geom_point(alpha = 0.5) + xlim(394850, 395300) + ylim(4437050, 4437280) + ggtitle('Path of X217 Oct 8th + 9th')
+```
+
+Animated plot:
+```{r}
+X217.plot <- ggplot(X217.all.0809, aes(x = X, y = Y, color = as.factor(day.night))) + geom_point(aes(size = 5)) + xlim(394850, 395300) + ylim(4437050, 4437280) + ggtitle('Path of X217 Oct 8th and 9th') +scale_colour_manual(values = c('#EF810E', '#053752'))
+X217.plot
+```
+
+```{r}
+library(gifski)
+library(gganimate)
+
+X217.gif <- X217.plot + transition_time(time) + labs(title = "Movement of X217, Time: {frame_time}", x = 'X-coordinate', y = 'Y-coordinate', colour = 'Time of Day') + shadow_wake(wake_length = 0.2, size = NULL, alpha = 0.1)
+
+animate(X217.gif, duration = 20)
+
+anim_save('X217plot2.gif', path = "C:\\Users\\User\\OneDrive - University College Cork\\Documents\\MSc\\Thesis\\X217 gif")
+```
+
+Plot night of October 8th on map:
+```{r}
+library(png)
+GroupA.map <- readPNG("C:\\Users\\User\\OneDrive\\Pictures\\Screenshots\\2023-06-21 (2).png")
+```
+
+```{r}
+# Set up a plot area with no plot
+plot(394890:395480, 4436830:4437420, type='n', main="Night of October 8th", xlab="x", ylab="y")
+ 
+# Get the plot information so the image will fill the plot box, and draw it
+lim <- par()
+rasterImage(GroupA.map, 
+            xleft=394890, xright=395480, 
+            ybottom=4436835, ytop=4437330)
+#grid()
+
+points(rest.days$X, rest.days$Y, pch =19, col = alpha('black', 0.5))
+points(X217.days$X, X217.days$Y, col = alpha('red', 0.5), pch =19)
+```
+
+
+

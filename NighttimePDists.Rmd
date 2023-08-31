@@ -1,0 +1,184 @@
+---
+title: "Nighttime Pairwise Distances"
+output: html_notebook
+---
+
+## Group A
+
+```{r}
+library(combinat)
+GroupA.pairs = combn(groupA.ids, 2)
+```
+
+Use spatsoc to create temporal groups:
+```{r}
+library(data.table)
+GroupA.night.dt = setDT(GroupA.night.df)
+
+library(spatsoc)
+group_times(GroupA.night.dt, datetime = 'time', threshold = '4 minutes')
+```
+
+```{r}
+timegroupsA.night = unique(GroupA.night.dt$timegroup)
+
+pairsA.night = c() 
+meanA.night = c() 
+medianA.night = c() 
+
+for(i in 1:276){
+  pair.id1 = GroupA.pairs[1, i]
+  pair.id2 = GroupA.pairs[2, i]
+  
+  pair.1 = GroupA.night.dt[which(GroupA.night.dt$idnum == pair.id1),]
+  pair.2 = GroupA.night.dt[which(GroupA.night.dt$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsA.night))
+  
+  for(i in 1:length(timegroupsA.night)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsA.night[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsA.night[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsA.night[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsA.night[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  pairsA.night <- append(pairsA.night, paste(pair.id1, 'and', pair.id2))
+  meanA.night <- append(meanA.night, mean(pair.dists, na.rm = TRUE))
+  medianA.night <- append(medianA.night, median(pair.dists, na.rm = TRUE))
+}
+
+pair_distsA.night <- data.frame(pairsA.night, meanA.night, medianA.night)
+```
+
+Create heatmap of means and medians:
+```{r}
+pair_distsA.mean.night <- matrix(1:576, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+pair_distsA.median.night <- matrix(1:576, nrow=24, dimnames = list(groupA.ids, groupA.ids))
+
+#set diagonal to 0
+for(i in 1:24){
+  pair_distsA.mean.night[i, i] = 0
+  pair_distsA.median.night[i, i] = 0
+}
+```
+
+```{r}
+n = 24
+m = 1
+k = n-1
+v = n-2
+
+for(i in 1:(n-1)){
+  l = i+1
+  pair_distsA.mean.night[l:n, i] = meanA.night[m:k]
+  pair_distsA.mean.night[i, l:n] = meanA.night[m:k]
+  pair_distsA.median.night[l:n, i] = medianA.night[m:k]
+  pair_distsA.median.night[i, l:n] = medianA.night[m:k]
+  m = k + 1
+  k = k + v
+  v = v - 1
+}
+```
+
+```{r}
+library(pheatmap)
+
+pheatmap(pair_distsA.mean.night, color = colorRampPalette(c('black','red', 'yellow'))(20), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Mean Pairwise Distance - Group A (Nighttime)')
+
+pheatmap(pair_distsA.median.night, color = colorRampPalette(c('black','red', 'yellow'))(20), cluster_cols = F, cluster_rows = F, treeheight_col = 0, cellwidth= 11, cellheight = 11, treeheight_row = 0, main = 'Median Pairwise Distance - Group A (Nighttime)')
+```
+
+## Group B
+
+```{r}
+GroupB.pairs = combn(groupB.ids, 2)
+
+GroupB.night.dt = setDT(GroupB.night.df)
+group_times(GroupB.night.dt, datetime = 'Time', threshold = '4 minutes')
+```
+
+```{r}
+timegroupsB.night = unique(GroupB.night.dt$timegroup)
+
+pairsB.night = c() #vector(mode = 'character', length= 28)
+meanB.night = c() #vector(mode = 'numeric', length = 28)
+medianB.night = c() #vector(mode = 'numeric', length = 28)
+
+for(i in 1:28){
+  pair.id1 = GroupB.pairs[1, i]
+  pair.id2 = GroupB.pairs[2, i]
+  
+  pair.1 = GroupB.night.dt[which(GroupB.night.dt$idnum == pair.id1),]
+  pair.2 = GroupB.night.dt[which(GroupB.night.dt$idnum == pair.id2),]
+  
+  pair.dists = vector(mode = 'numeric', length = length(timegroupsB.night))
+  
+  for(i in 1:length(timegroupsB.night)){
+    X.1 = pair.1[which(pair.1$timegroup == timegroupsB.night[i]),]$X
+    Y.1 = pair.1[which(pair.1$timegroup == timegroupsB.night[i]),]$Y
+    X.2 = pair.2[which(pair.2$timegroup == timegroupsB.night[i]),]$X
+    Y.2 = pair.2[which(pair.2$timegroup == timegroupsB.night[i]),]$Y
+    dist = sqrt(((X.1-X.2)**2)+((Y.1-Y.2)**2))
+    # account for 0 or more than one recordings at a timegroup
+    if(length(dist) == 1){
+      pair.dists[i] = dist
+    } else if(length(dist) == 0){
+      pair.dists[i] = NA
+    } else{
+      pair.dists[i] = mean(dist)
+    }
+  }
+  
+  pairsB.night <- append(pairsB.night, paste(pair.id1, 'and', pair.id2))
+  meanB.night <- append(meanB.night, mean(pair.dists, na.rm = TRUE))
+  medianB.night <- append(medianB.night, median(pair.dists, na.rm = TRUE))
+}
+
+pair_distsB.night <- data.frame(pairsB.night, meanB.night, medianB.night)
+```
+
+Create heatmap of means and medians:
+```{r}
+pair_distsB.mean.night <- matrix(1:64, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+pair_distsB.median.night <- matrix(1:64, nrow=8, dimnames = list(groupB.ids, groupB.ids))
+
+#set diagonal to 0
+for(i in 1:8){
+  pair_distsB.mean.night[i, i] = 0
+  pair_distsB.median.night[i, i] = 0
+}
+```
+
+```{r}
+n = 8
+m = 1
+k = n-1
+v = n-2
+
+for(i in 1:(n-1)){
+  l = i+1
+  pair_distsB.mean.night[l:n, i] = meanB.night[m:k]
+  pair_distsB.mean.night[i, l:n] = meanB.night[m:k]
+  pair_distsB.median.night[l:n, i] = medianB.night[m:k]
+  pair_distsB.median.night[i, l:n] = medianB.night[m:k]
+  m = k + 1
+  k = k + v
+  v = v - 1
+}
+```
+
+```{r}
+pheatmap(pair_distsB.mean.night, color = colorRampPalette(c('black','red', 'yellow'))(20), cluster_cols = F, cluster_rows = F, treeheight_col = 0, treeheight_row = 0, cellwidth= 33, cellheight = 33, main = 'Mean Pairwise Distance - Group B (Nighttime)')
+
+pheatmap(pair_distsB.median.night, color = colorRampPalette(c('black','red', 'yellow'))(20), cluster_cols = F, cluster_rows = F, treeheight_col = 0, treeheight_row = 0, cellwidth= 33, cellheight = 33, main = 'Median Pairwise Distance - Group B (Nighttime)')
+```
+

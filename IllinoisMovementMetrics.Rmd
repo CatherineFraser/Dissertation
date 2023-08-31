@@ -1,0 +1,305 @@
+---
+title: "Illionis Movement Metrics"
+output: html_notebook
+---
+
+## Group B
+
+```{r}
+#use spatsoc to create temporal groups:
+library(data.table)
+GroupB.all.dt = setDT(GroupB.all.df)
+
+library(spatsoc)
+
+group_times(GroupB.all.dt, datetime = 'Time', threshold = '4 minutes')
+```
+
+```{r}
+timegroupsB = unique(GroupB.all.dt$timegroup)
+```
+
+Herd Centroid Coordinates:
+```{r}
+X_c = c()
+Y_c = c()
+
+for(i in 1:length(timegroupsB)){
+  
+  subgroup = GroupB.all.dt[which(GroupB.all.dt$timegroup == timegroupsB[i]),]
+  count = 0
+  sum_X = 0
+  sum_Y = 0
+  
+  for(j in 1:length(groupB.ids)){
+    X_j = mean(subgroup[which(subgroup$idnum == groupB.ids[j]),]$X)
+    Y_j = mean(subgroup[which(subgroup$idnum == groupB.ids[j]),]$Y)
+    
+    if(is.nan(X_j) == FALSE & is.nan(Y_j) == FALSE){
+      count = count + 1
+      sum_X = sum_X + X_j
+      sum_Y = sum_Y + Y_j
+    }
+  }
+  
+  X_c <- append(X_c, sum_X/count)
+  Y_c <- append(Y_c, sum_Y/count)
+}
+
+herdB_c = data.frame(timegroupsB, X_c, Y_c)
+```
+
+```{r}
+library(ggplot2)
+ggplot(herdB_c, aes(x = X_c, y = Y_c, colour = timegroupsB)) + geom_point()
+```
+
+Herd radius:
+```{r}
+R_n = c()
+timegroups_r = c()
+
+for(i in 1:length(timegroupsB)){
+  
+  subgroup = GroupB.all.dt[which(GroupB.all.dt$timegroup == timegroupsB[i]),]
+  count = 0
+  D_n = c()
+  Xc = herdB_c[which(herdB_c$timegroupsB == timegroupsB[i]),]$X_c
+  Yc = herdB_c[which(herdB_c$timegroupsB == timegroupsB[i]),]$Y_c
+  
+  for(j in 1:length(groupB.ids)){
+    X_j = mean(subgroup[which(subgroup$idnum == groupB.ids[j]),]$X)
+    Y_j = mean(subgroup[which(subgroup$idnum == groupB.ids[j]),]$Y)
+    
+    if(is.nan(X_j) == FALSE & is.nan(Y_j) == FALSE){
+      count = count + 1
+      D = sqrt((X_j - Xc)**2 + (Y_j - Yc)**2)
+    }
+    D_n <- append(D_n, D)
+  }
+  if(count > 1){
+  R_n <- append(R_n, D_n/count)
+  timegroups_r <- append(timegroups_r, timegroupsB[i])
+  }
+}
+
+herdB_r = data.frame(timegroups_r, R_n)
+```
+
+Plot timeseries:
+```{r}
+ggplot(herdB_r, aes(x = timegroups_r, y = R_n)) + geom_point() + geom_line() + labs(title = 'Group B Herd Radius over Time', x = 'Time interval', y = 'Herd Radius (m)')
+```
+
+## Group A
+
+```{r}
+#use spatsoc to create temporal groups:
+library(data.table)
+GroupA.all.dt = setDT(GroupA.df)
+
+library(spatsoc)
+
+group_times(GroupA.all.dt, datetime = 'time', threshold = '4 minutes')
+```
+
+```{r}
+timegroupsA = unique(GroupA.all.dt$timegroup)
+```
+
+Herd Centroid Coordinates:
+```{r}
+X_c = c()
+Y_c = c()
+
+for(i in 1:length(timegroupsA)){
+  
+  subgroup = GroupA.all.dt[which(GroupA.all.dt$timegroup == timegroupsA[i]),]
+  count = 0
+  sum_X = 0
+  sum_Y = 0
+  
+  for(j in 1:length(groupA.ids)){
+    X_j = mean(subgroup[which(subgroup$idnum == groupA.ids[j]),]$X)
+    Y_j = mean(subgroup[which(subgroup$idnum == groupA.ids[j]),]$Y)
+    
+    if(is.nan(X_j) == FALSE & is.nan(Y_j) == FALSE){
+      count = count + 1
+      sum_X = sum_X + X_j
+      sum_Y = sum_Y + Y_j
+    }
+  }
+  
+  X_c <- append(X_c, sum_X/count)
+  Y_c <- append(Y_c, sum_Y/count)
+}
+
+herdA_c = data.frame(timegroupsA, X_c, Y_c)
+```
+
+```{r}
+ggplot(herdA_c, aes(x = X_c, y = Y_c, colour = timegroupsA)) + geom_point()
+```
+
+Herd radius:
+```{r}
+R_n = c()
+timegroups_r = c()
+
+for(i in 1:length(timegroupsA)){
+  
+  subgroup = GroupA.all.dt[which(GroupA.all.dt$timegroup == timegroupsA[i]),]
+  count = 0
+  D_n = c()
+  Xc = herdA_c[which(herdA_c$timegroupsA == timegroupsA[i]),]$X_c
+  Yc = herdA_c[which(herdA_c$timegroupsA == timegroupsA[i]),]$Y_c
+  
+  for(j in 1:length(groupA.ids)){
+    X_j = mean(subgroup[which(subgroup$idnum == groupA.ids[j]),]$X)
+    Y_j = mean(subgroup[which(subgroup$idnum == groupA.ids[j]),]$Y)
+    
+    if(is.nan(X_j) == FALSE & is.nan(Y_j) == FALSE){
+      count = count + 1
+      D = sqrt((X_j - Xc)**2 + (Y_j - Yc)**2)
+    }
+    D_n <- append(D_n, D)
+  }
+  if(count > 1){
+  R_n <- append(R_n, D_n/count)
+  timegroups_r <- append(timegroups_r, timegroupsA[i])
+  }
+}
+
+herdA_r = data.frame(timegroups_r, R_n)
+```
+
+Plot timeseries:
+```{r}
+ggplot(herdA_r, aes(x = timegroups_r, y = R_n)) + geom_point() + geom_line() + labs(title = 'Group A Herd Radius over Time', x = 'Time interval', y = 'Herd Radius (m)')
+```
+
+Add date-time related to each timegroup:
+```{r}
+#Group A
+datesA = c()
+
+for(i in 1:length(timegroupsA)){
+  subset = GroupA.all.dt[which(GroupA.all.dt$timegroup == timegroupsA[i]), ]
+  date_time = min(subset$time)
+  datesA <- append(datesA, date_time)
+}
+
+#Group B
+datesB = c()
+
+for(i in 1:length(timegroupsB)){
+  subset = GroupB.all.dt[which(GroupB.all.dt$timegroup == timegroupsB[i]), ]
+  date_time = min(subset$Time)
+  datesB <- append(datesB, date_time)
+}
+```
+
+```{r}
+herdA_c$time <- datesA
+herdB_c$Time <- datesB
+```
+Find which timegroups correspond to June 8th
+```{r}
+June8_tg = herdA_c[which(herdA_c$time <= '2011-06-09 01:00:00' & herdA_c$time >= '2011-06-08 01:00:00'), ]
+```
+
+```{r}
+ggplot(herdA_c, aes(x = X_c, y = Y_c, colour = time)) + geom_point() + ggtitle('Herd Centroids')
+```
+
+```{r}
+ggplot(June8_tg, aes(x = X_c, y = Y_c, colour = time)) + geom_point() + ggtitle('Herd Centroids 2011-06-08')
+```
+Get herd radii 
+```{r}
+min_time_08 = min(June8_tg$timegroupsA)
+max_time_08 = max(June8_tg$timegroupsA)
+```
+
+```{r}
+June8_rad = herdA_r[which(herdA_r$timegroups_r >= min_time_08 & herdA_r$timegroups_r <= max_time_08), ]
+
+#overall
+ggplot(herdA_r, aes(x = timegroups_r, y = R_n)) + geom_point() + geom_line() + geom_vline(xintercept = c(min_time_08, max_time_08), linetype=4, col = 'red') + ggtitle('Group A Herd Radii over Time, with June 8th marked')
+
+#June 8th
+ggplot(June8_rad, aes(x = timegroups_r, y = R_n)) + geom_point() + geom_line() +ggtitle('Group A Herd Radii June 8th')
+```
+
+What is that huge radius?
+```{r}
+#max(herdA_r$R_n)= 33.52016
+
+subgroup = herdA_r[which(herdA_r$R_n > 33), ]
+subgroup$timegroups_r # = 665
+```
+
+```{r}
+subgroup2 = herdA_c[which(herdA_c$timegroupsA == 665), ]
+subgroup2$time # = 2011-06-03 20:30:06 UTC
+```
+
+```{r}
+unusual.A = GroupA.all.dt[which(GroupA.all.dt$timegroup == 665), ]
+
+ggplot(unusual.A, aes(x = X, y = Y, colour = idnum)) + geom_point(alpha = 0.8) + xlim(394850, 395300) +   ylim(4437050, 4437280) + ggtitle('2011-06-03 20:30:06')
+
+unusual.A2 = GroupA.all.dt[which(GroupA.all.dt$timegroup == 100), ]
+
+ggplot(unusual.A2, aes(x = X, y = Y, colour = idnum)) + geom_point(alpha = 0.8) + xlim(394850, 395300) +   ylim(4437050, 4437280) + ggtitle('Timegroup 100')
+
+unusual.A3 = GroupA.all.dt[which(GroupA.all.dt$timegroup == 1500), ]
+
+ggplot(unusual.A3, aes(x = X, y = Y, colour = idnum)) + geom_point(alpha = 0.8) + xlim(394850, 395300) +   ylim(4437050, 4437280) + ggtitle('Timegroup 1500')
+```
+
+# Herd paths based on centroids:
+
+split by day:
+```{r}
+#add date column
+herdA_c$date = format(herdA_c$time, format = '%Y-%m-%d')
+
+herdB_c$date = format(herdB_c$Time, format = '%Y-%m-%d')
+```
+
+```{r}
+un.datesA = unique(herdA_c$date)
+
+for(i in 1:length(un.datesA)){
+  day.sub = herdA_c[which(herdA_c$date == un.datesA[i]), ]
+  print(ggplot(day.sub, aes(x = X_c, y = Y_c, colour = time)) + geom_path() + geom_point(alpha = 0.5) + xlim(394850, 395300) + ylim(4437050, 4437280) + ggtitle(un.datesA[i]))
+}
+```
+
+```{r}
+un.datesB = unique(herdB_c$date)
+
+for(i in 1:length(un.datesB)){
+  day.sub = herdB_c[which(herdB_c$date == un.datesB[i]), ]
+  print(ggplot(day.sub, aes(x = X_c, y = Y_c, colour = Time)) + geom_path() + geom_point(alpha = 0.5)  + xlim(317910, 318000) + ylim(4367510, 4367820) + ggtitle(un.datesB[i]))
+}
+```
+
+
+Investigate Group A radii dip:
+```{r}
+subA_r = herdA_r[which(herdA_r$timegroups_r <= 2900 & herdA_r$timegroups_r >= 2350), ]
+
+ggplot(subA_r, aes(x = timegroups_r, y = R_n)) + geom_point() + geom_line() + labs(title = 'Group A Herd Radius over Time', x = 'Time interval', y = 'Herd Radius (m)')
+```
+
+dip between 2550 and 2850
+```{r}
+sub2550 = herdA_c[which(herdA_c$timegroupsA == 2550), ]
+sub2550$time #2011-06-09 03:14:02 UTC
+
+sub2850 = herdA_c[which(herdA_c$timegroupsA == 2850), ]
+sub2850$time #2011-06-09 23:14:00 UTC
+```
+

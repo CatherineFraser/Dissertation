@@ -1,0 +1,35 @@
+---
+title: "Distribution Animations"
+output: html_notebook
+---
+
+First plot them:
+```{r}
+#Group A
+groupA.plot <- ggplot(GroupA.all.dt, aes(x=X, y=Y, colour = idnum)) + xlim(394850, 395300) + ylim(4437050, 4437280) +geom_point()
+
+#Group B
+groupB.plot <- ggplot(GroupB.all.dt, aes(x=X, y=Y, colour = idnum)) + xlim(317910, 318000) + ylim(4367510, 4367820) +geom_point()
+
+groupA.plot
+groupB.plot
+```
+
+```{r}
+library(gifski)
+library(gganimate)
+
+groupA.gif <- groupA.plot + transition_time(timegroup) + labs(title = "Movement of Group A over Time", x = 'X-Coordinate', y = 'Y-COordinate', color = 'ID Number') + #shadow_wake(wake_length = 0.2, size = NULL, alpha = 0.1)
+#groupA.gif
+
+animate(groupA.gif, duration = 30)
+
+#anim_save('GroupAplot2.gif', path = "C:\\Users\\User\\OneDrive - University College Cork\\Documents\\MSc\\Thesis\\X217 gif")
+```
+
+```{r}
+groupB.gif <- groupB.plot + transition_time(timegroup) + labs(title='Movement of Group B Herd', colour = 'ID number')
+#groupB.gif
+animate(groupB.gif, duration= 30)
+```
+
